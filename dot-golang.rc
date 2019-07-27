@@ -1,0 +1,68 @@
+#!/usr/bin/env bash 
+if [ -z $BOOTER_DOT_GOLANG_RC ];then
+  BOOTER_DOT_GOLANG_RC=$( ruby -e "puts File.realpath('${BASH_SOURCE[0]}')")
+  BOOTER_DOT_GOLANG_HOME=$(dirname $BOOTER_DOT_GOLANG_RC)
+  [ -d "$BOOTER_DOT_GOLANG_HOME/bin" ] && PATH=$PATH:$BOOTER_DOT_GOLANG_HOME/bin
+else
+  if [ -z $FORCE_RC ]; then
+    echo Warning: has sourced $BOOTER_DOT_GOLANG_RC!
+    return 1 
+  fi
+fi
+
+function dot_golang(){
+  tp=${1:-cd}
+  case "$tp" in
+    rc|file)
+      echo "$BOOTER_DOT_GOLANG_RC"
+      ;;
+    home|root)
+      echo $BOOTER_DOT_GOLANG_HOME
+      ;;
+    cd)
+      cd "$BOOTER_DOT_GOLANG_HOME"
+      ;;
+    edit|vi)
+      vi "$BOOTER_DOT_GOLANG_RC"
+      $FUNCNAME reload
+      ;;
+    show)
+      cat "$BOOTER_DOT_GOLANG_RC"
+      ;;
+    reload|source)
+      FORCE_RC=1 source "$BOOTER_DOT_GOLANG_RC"
+      echo ==has reloaded "$BOOTER_DOT_GOLANG_RC"
+      ;;
+    help|h)
+      echo rc file: "$BOOTER_DOT_GOLANG_RC"
+      type $FUNCNAME 
+      ;;
+    *)
+      $FUNCNAME help
+      ;;
+  esac
+}
+
+dgopath=$BOOTER_DOT_GOLANG_HOME
+export GOPATH="$dgopath"
+export PATH="$PATH:$dgopath/bin"
+
+dgo(){
+  tp=${1:-}
+  case "$tp" in
+    tree)
+      tree -L 3 $dgopath/src ;;
+      *)
+      dot_golang $@
+  esac
+}
+
+return 0
+
+brew install go
+
+# package
+go get golang.org/x/tour/gotour
+go get github.com/jessfraz/reg
+
+go run hello.go
