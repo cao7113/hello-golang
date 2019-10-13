@@ -59,10 +59,6 @@ dgo(){
 
 return 0
 
-brew install go
-
 # package
 go get golang.org/x/tour/gotour
 go get github.com/jessfraz/reg
-
-go run hello.go
