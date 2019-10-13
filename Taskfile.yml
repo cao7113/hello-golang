@@ -13,3 +13,7 @@ tasks:
   hello:
     cmds:
       - go run hello/main.go
+
+  install:
+    cmds:
+      - brew install golang
