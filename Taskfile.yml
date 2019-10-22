@@ -3,17 +3,46 @@
 version: '2'
 
 vars:
-  GREETING: Hello, World!
+  GREETING: Hello, Golang!
 
 tasks:
   default:
     cmds:
       - echo "{{.GREETING}}"
     silent: true
-  hello:
+  run:
     cmds:
-      - go run hello/main.go
+      - go run main.go
+
+  mod:
+    cmds:
+      # - go mod init github.com/cao7113/golang
+      - go mod tidy -v
 
   install:
     cmds:
       - brew install golang
+
+  ## bloomrpc todo
+
+  ## env
+  install-direnv:
+    cmds:
+      - brew install direnv
+      - echo hook your shell as https://direnv.net/docs/hook.html
+
+  ## gore CLI
+  cli:
+    desc: Auto-importing (gore -autoimport), quit using Ctrl+D or :quit or :q
+    cmds:
+      - gore -autoimport
+
+  install-gore:
+    desc: install https://github.com/motemen/gore
+    cmds:
+      - |
+        # The gore command requires Go tool-chains on runtime, so standalone binary is not distributed.
+        GO111MODULE=off go get -u github.com/motemen/gore/cmd/gore
+        # Make sure $GOPATH/bin is in your $PATH.
+        GO111MODULE=off go get -u github.com/mdempsky/gocode   # for code completion
+        GO111MODULE=off go get -u github.com/k0kubun/pp        # or github.com/davecgh/go-spew/spew
