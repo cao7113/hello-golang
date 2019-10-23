@@ -1,0 +1,13 @@
+# https://help.github.com/en/github/automating-your-workflow-with-github-actions/workflow-syntax-for-github-actions
+name: Docker Actions
+on:
+  push:
+    branches:
+    - ci-docker
+jobs:
+  docker:
+    name: Docker
+    runs-on: ubuntu-18.04
+    steps:
+    - name: inspect docker env
+      run: docker version
