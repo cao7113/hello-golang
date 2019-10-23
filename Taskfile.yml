@@ -4,12 +4,19 @@ version: '2'
 
 vars:
   GREETING: Hello, Golang!
+  # GO_MOD: "github.com/cao7113/golang"
 
 tasks:
   default:
     cmds:
       - echo "{{.GREETING}}"
     silent: true
+  
+  lint:
+    cmds:
+      - |
+        PKG_LIST=$(go list github.com/cao7113/golang/... | grep -v /vendor/)
+        golint -set_exit_status ${PKG_LIST}
   run:
     cmds:
       - go run main.go
