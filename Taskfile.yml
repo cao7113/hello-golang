@@ -7,7 +7,7 @@ vars:
   # GO_MOD: "github.com/cao7113/golang"
 
 tasks:
-  default:
+  hello:
     cmds:
       - echo "{{.GREETING}}"
     silent: true

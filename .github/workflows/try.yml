@@ -49,6 +49,7 @@ jobs:
       run: |
         export PATH=$PATH:$(go env GOPATH)/bin # temporary fix. See https://github.com/actions/setup-go/issues/14
         go get -u -v golang.org/x/lint/golint 
+        task --version
         task lint
 
     # - name: Copy .netrc to home directory
