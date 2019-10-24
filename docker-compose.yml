@@ -14,8 +14,12 @@ services:
     restart: always
     environment:
       MYSQL_ROOT_PASSWORD: root
-    volumes:
-       - db-data:/var/lib/mysql/data
+    # volumes:
+    #    - dbdata:/var/lib/mysql/data
+  # volumes:
+  #   dbdata:
+  #   # es-data:
+
   # es:
   #   image: mysql:5.7
   #   restart: always
@@ -23,6 +27,3 @@ services:
   #     MYSQL_ROOT_PASSWORD: root
   #   volumes:
   #      - db-data:/var/lib/mysql/data
-  volumes:
-    db-data:
-    # es-data:
