@@ -46,6 +46,7 @@ function dot_golang(){
 dgopath=$BOOTER_DOT_GOLANG_HOME
 export GOPATH="$dgopath"
 export PATH="$PATH:$dgopath/bin"
+export PATH="/usr/local/opt/go@1.12/bin:$PATH"
 
 dgo(){
   tp=${1:-}
