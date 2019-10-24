@@ -37,14 +37,15 @@ jobs:
       with:
         go-version: '1.13' # The Go version to download (if necessary) and use.
       id: go
-
     - name: Install task 
+      # todo version
       run: |
         go get -u -v github.com/go-task/task/cmd/task
     - name: Check out code into the Go module directory
       uses: actions/checkout@v1
       with:
         fetch-depth: 2
+    # todo mock lint error
     - name: Lint Go Code
       run: |
         export PATH=$PATH:$(go env GOPATH)/bin # temporary fix. See https://github.com/actions/setup-go/issues/14
@@ -54,17 +55,15 @@ jobs:
 
     # - name: Copy .netrc to home directory
     #   run: cp .netrc ~/
-
     # - name: Install golangci-lint
     #   run: curl -sfL https://raw.githubusercontent.com/golangci/golangci-lint/master/install.sh| sh -s v1.20.0
-
     # - name: Lint
     #   run: ./bin/golangci-lint run
 
     # - name: Build
-    #   run: go build -v cmd/main.go
+    #   run: go build -v main.go
 
-    - run: go run main.go -v  
+    # - run: ./main  
 
   ######################################################################
   #               Docker
