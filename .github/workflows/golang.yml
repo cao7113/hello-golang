@@ -13,18 +13,14 @@ jobs:
       uses: actions/setup-go@v1
       with:
         go-version: '1.13' # The Go version to download (if necessary) and use.
-      id: go
-    - name: Install task 
-      needs: go
+    - name: Install task
       run: |
         go get -u -v github.com/go-task/task/cmd/task
-      id: task-tool
     - name: Check out code into the Go module directory
       uses: actions/checkout@v1
       with:
         fetch-depth: 2
     - name: Golint check
-      needs: [task-tool]
       run: |
         export PATH=$PATH:$(go env GOPATH)/bin # temporary fix. See https://github.com/actions/setup-go/issues/14
         go get -u -v golang.org/x/lint/golint 
