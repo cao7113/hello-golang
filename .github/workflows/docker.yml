@@ -19,7 +19,6 @@ jobs:
         fetch-depth: 1
     - name: run db service
       run: |
-        ls -al
         docker-compose up -d
     - name: test service
       run: curl -Lv localhost:8080
