@@ -12,6 +12,6 @@ func Try() {
 }
 
 // mock Golint style error
-func TryLint() {
-	fmt.Println("try golint")
-}
+// func TryLint() {
+// 	fmt.Println("try golint")
+// }
