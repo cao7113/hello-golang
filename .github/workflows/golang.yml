@@ -9,13 +9,12 @@ jobs:
     name: Golang
     runs-on: ubuntu-18.04
     steps:
+    - name: install task tool
+      run: sudo snap install task --classic
     - name: Set up Go 1.13
       uses: actions/setup-go@v1
       with:
         go-version: '1.13' # The Go version to download (if necessary) and use.
-    - name: Install task
-      run: |
-        go get -u -v github.com/go-task/task/cmd/task
     - name: Check out code into the Go module directory
       uses: actions/checkout@v1
       with:
@@ -24,11 +23,10 @@ jobs:
       run: |
         export PATH=$PATH:$(go env GOPATH)/bin # temporary fix. See https://github.com/actions/setup-go/issues/14
         go get -u -v golang.org/x/lint/golint 
-        task --version
         task lint
     - name: Test
       run: go test github.com/cao7113/golang/try
-    # todo: test and coverage
+    # todo: coverage
 
     # - name: Copy .netrc to home directory
     #   run: cp .netrc ~/

@@ -9,7 +9,7 @@ jobs:
     name: Go task tool
     runs-on: ubuntu-18.04
     steps:
-    - name: install by os pkg
+    - name: install Task tool by os pkg
       run: sudo snap install task --classic
       # can use sudo!!!
     # - name: Install Task tool
