@@ -10,7 +10,7 @@ jobs:
     runs-on: ubuntu-18.04
     steps:
     - name: install by os pkg
-      run: sudo snap install task
+      run: sudo snap install task --classic
     - name: Install Task tool
       run: |
         #https://taskfile.dev/#/installation?id=install-script
