@@ -14,6 +14,8 @@ jobs:
         docker version
         docker-compose version
     - name: run db service
-      run: docker-compose up -d
+      run: |
+        ls -al
+        docker-compose up -d
     - name: test service
       run: curl -Lv localhost:8080
