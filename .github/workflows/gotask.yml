@@ -23,6 +23,7 @@ jobs:
     #     ls -al bin
     #     pwd
     ## PROBLEM: todo export PATH missing in next step
+    # always use `bin/task xxx`?
     - name: check task before checkout
       run: |
         pwd

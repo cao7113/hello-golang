@@ -1,5 +1,5 @@
 # https://help.github.com/en/github/automating-your-workflow-with-github-actions/workflow-syntax-for-github-actions
-name: Try Github Actions
+name: Try Actions
 on:
   push:
     branches:
