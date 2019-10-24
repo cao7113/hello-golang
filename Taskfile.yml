@@ -1,5 +1,4 @@
 # https://taskfile.dev
-
 version: '2'
 
 vars:
@@ -11,12 +10,18 @@ tasks:
     cmds:
       - echo "{{.GREETING}}"
     silent: true
+
+  test:
+    desc: go test
+    cmds:
+      # todo
   
   lint:
     cmds:
       - |
         PKG_LIST=$(go list github.com/cao7113/golang/... | grep -v /vendor/)
         golint -set_exit_status ${PKG_LIST}
+
   run:
     cmds:
       - go run main.go
@@ -30,10 +35,13 @@ tasks:
     cmds:
       - brew install golang
 
-  ## bloomrpc todo
+  install-bloomrpc:
+    desc: install rpc GUI client
+    cmds:
+      - brew cask install bloomrpc
 
-  ## env
   install-direnv:
+    desc: install .envrc manager
     cmds:
       - brew install direnv
       - echo hook your shell as https://direnv.net/docs/hook.html
@@ -43,7 +51,6 @@ tasks:
     desc: Auto-importing (gore -autoimport), quit using Ctrl+D or :quit or :q
     cmds:
       - gore -autoimport
-
   install-gore:
     desc: install https://github.com/motemen/gore
     cmds:

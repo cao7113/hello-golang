@@ -10,4 +10,6 @@ jobs:
     runs-on: ubuntu-18.04
     steps:
     - name: inspect docker env
-      run: docker version
+      run: |
+        docker version
+        docker-compose version
