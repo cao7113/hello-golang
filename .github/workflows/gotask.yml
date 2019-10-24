@@ -11,16 +11,18 @@ jobs:
     steps:
     - name: install by os pkg
       run: sudo snap install task --classic
-    - name: Install Task tool
-      run: |
-        #https://taskfile.dev/#/installation?id=install-script
-        curl -sL https://taskfile.dev/install.sh | sh
-        export PATH=$PATH:$PWD/bin
-        echo PATH=$PATH
-        which task
-        task --version
-        ls -al bin
-        pwd
+      # can use sudo!!!
+    # - name: Install Task tool
+    #   run: |
+    #     #https://taskfile.dev/#/installation?id=install-script
+    #     curl -sL https://taskfile.dev/install.sh | sh
+    #     export PATH=$PATH:$PWD/bin
+    #     echo PATH=$PATH
+    #     which task
+    #     task --version
+    #     ls -al bin
+    #     pwd
+    ## PROBLEM: todo export PATH missing in next step
     - name: check task before checkout
       run: |
         pwd
