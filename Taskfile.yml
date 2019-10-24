@@ -17,6 +17,7 @@ tasks:
       # todo
   
   lint:
+    desc: lint code
     cmds:
       - |
         PKG_LIST=$(go list github.com/cao7113/golang/... | grep -v /vendor/)

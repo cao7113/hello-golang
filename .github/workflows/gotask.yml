@@ -1,0 +1,45 @@
+# https://help.github.com/en/github/automating-your-workflow-with-github-actions/workflow-syntax-for-github-actions
+name: Task Actions
+on:
+  push:
+    branches:
+    - ci-gotask
+jobs:
+  gotask:
+    name: Go task tool
+    runs-on: ubuntu-18.04
+    steps:
+    - name: install by os pkg
+      run: sudo snap install task
+    - name: Install Task tool
+      run: |
+        #https://taskfile.dev/#/installation?id=install-script
+        curl -sL https://taskfile.dev/install.sh | sh
+        export PATH=$PATH:$PWD/bin
+        echo PATH=$PATH
+        which task
+        task --version
+        ls -al bin
+        pwd
+    - name: check task before checkout
+      run: |
+        pwd
+        echo PATH=$PATH
+        which task
+        task --version
+    # - name: Set up Go 1.13
+    #   uses: actions/setup-go@v1
+    #   with:
+    #     go-version: '1.13' # The Go version to download (if necessary) and use.
+    # - name: Install using go pkg
+    #   run: go get -u -v github.com/go-task/task/cmd/task
+    - name: Check out code into the Go module directory
+      uses: actions/checkout@v1
+      with:
+        fetch-depth: 1
+    - name: check task after checkout
+      run: |
+        pwd
+        echo PATH=$PATH
+        which task
+        task --version
