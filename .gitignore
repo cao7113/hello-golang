@@ -1,5 +1,2 @@
-bin
-src
-pkg
-
 .vscode
+.idea

@@ -1,9 +1,10 @@
 # https://taskfile.dev
 version: '2'
 
+env:
+ GOMODNAME: "github.com/cao7113/golang"
 vars:
   GREETING: Hello, Golang!
-  # GO_MOD: "github.com/cao7113/golang"
 
 tasks:
   hello:
@@ -20,8 +21,23 @@ tasks:
     desc: lint code
     cmds:
       - |
-        PKG_LIST=$(go list github.com/cao7113/golang/... | grep -v /vendor/)
+        PKG_LIST=$(go list $GOMODNAME/... | grep -v /vendor/)
         golint -set_exit_status ${PKG_LIST}
+
+  ## Golangci-lint
+  cilint:
+    desc: run golangci-lint
+    cmds:
+      - golangci-lint run ./...
+  cilint-try:
+    desc: run golangci-lint in trytest
+    cmds:
+      - golangci-lint run trytest
+  cilinters:
+    desc: golangci-lint
+    cmds:
+      # https://raw.githubusercontent.com/golangci/golangci-lint/v1.20.1/.golangci.example.yml
+      - golangci-lint linters -v
 
   run:
     cmds:
@@ -29,7 +45,7 @@ tasks:
 
   mod:
     cmds:
-      # - go mod init github.com/cao7113/golang
+      # - go mod init $GOMODNAME
       - go mod tidy -v
     
   ## docker

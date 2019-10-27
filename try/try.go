@@ -10,8 +10,3 @@ import (
 func Try() {
 	fmt.Printf("try %s at %s\n", runtime.Version(), time.Now())
 }
-
-// mock Golint style error
-// func TryLint() {
-// 	fmt.Println("try golint")
-// }
