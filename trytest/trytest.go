@@ -13,5 +13,4 @@ func TryLint() {
 	fmt.Println("try GoLint")
 	// mock vet error
 	// fmt.Printf("%s, %v", "hello")
-
 }

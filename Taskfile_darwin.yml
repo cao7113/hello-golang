@@ -1,0 +1,10 @@
+# https://taskfile.dev
+version: '2'
+
+tasks:
+  ## db
+  install-mig:
+    desc: install migrations
+    cmds:
+      - which migrate || brew install golang-migrate
+      - migrate --version

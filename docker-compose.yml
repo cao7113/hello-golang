@@ -15,7 +15,6 @@ services:
   #   dbdata:
   #   # es-data:
 
-  # todo
   # es:
   #   image: mysql:5.7
   #   restart: always
@@ -40,6 +39,3 @@ services:
       - 8080:8080
     depends_on: 
     - db
-
-  # app run test
-  

@@ -2,9 +2,13 @@
 version: '2'
 
 env:
- GOMODNAME: "github.com/cao7113/golang"
+  GOMODNAME: "github.com/cao7113/golang"
+  # todo
+  # TEST_DB_NAME: golang_test
+  TEST_DB_URL: mysql://root:@tcp/golang_test?parseTime=true
 vars:
   GREETING: Hello, Golang!
+  TEST_DB_NAME: golang_test
 
 tasks:
   hello:
@@ -15,7 +19,7 @@ tasks:
   test:
     desc: go test
     cmds:
-      # todo
+      - go test $GOMODNAME/trytest -v
   
   lint:
     desc: lint code
@@ -33,7 +37,7 @@ tasks:
     desc: run golangci-lint in trytest
     cmds:
       - golangci-lint run trytest
-  cilinters:
+  cilinter:
     desc: golangci-lint
     cmds:
       # https://raw.githubusercontent.com/golangci/golangci-lint/v1.20.1/.golangci.example.yml
@@ -67,6 +71,46 @@ tasks:
     cmds:
       - brew install direnv
       - echo hook your shell as https://direnv.net/docs/hook.html
+
+  ## DB
+  # use https://github.com/golang-migrate/migrate/tree/master/cmd/migrate
+  db:
+    desc: go db session
+    cmds:
+      - mysql -uroot {{.TEST_DB_NAME}}
+  db-create:
+    cmds:
+      - mysql -uroot -e "create database if not exists \`{{.TEST_DB_NAME}}\`;"
+  db-drop:
+    cmds:
+      - mysql -uroot -e "drop database if exists \`{{.TEST_DB_NAME}}\`;"
+  # migrate create -ext sql -dir db/migrate create_users_table
+  db-up:
+    desc: migrate up
+    cmds:
+      - migrate -database $TEST_DB_URL -path db/migrate up
+  db-down:
+    desc: migrate down
+    cmds:
+      - migrate -database $TEST_DB_URL -path db/migrate down
+  db-reset:
+    cmds:
+      # call tasks serially other than concurrently
+      - task: db-drop
+      - task: db-create
+      - task: db-up
+  db-dbs:
+    desc: show databases
+    cmds:
+      - mysql -uroot -e "show databases"
+  db-tables:
+    desc: show tables
+    cmds:
+      - mysql -uroot {{.TEST_DB_NAME}} -e "show full tables"
+  install-mig:
+    desc: install migrations by https://github.com/golang-migrate/migrate/tree/master/cmd/migrate
+    cmds:
+      - echo should implement in Taskfile_{{GOOS}}.yml
 
   ## gore CLI
   cli:
