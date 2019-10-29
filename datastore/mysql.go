@@ -1,4 +1,4 @@
-package mysql
+package datastore
 
 import (
 	"log"
@@ -8,15 +8,15 @@ import (
 	_ "github.com/jinzhu/gorm/dialects/mysql"
 )
 
-// Client mysql db connection
-var Client *gorm.DB
+// MyDB mysql db connection
+var MyDB *gorm.DB
 
-// Setup setup conn
-func Setup() {
+// SetupMysql setup conn
+func SetupMysql() {
 	dsn := config.Settings.DbURL
-	Client, err := gorm.Open("mysql", dsn)
-	defer Client.Close()
+	MyDB, err := gorm.Open("mysql", dsn)
 	if err != nil {
 		log.Fatalln(err)
 	}
+	defer MyDB.Close()
 }

@@ -3,8 +3,8 @@ package models
 import (
 	"time"
 
-	"github.com/cao7113/golang/datastore/mysql"
-
+	"github.com/cao7113/golang/datastore"
+	
 	"github.com/jinzhu/gorm"
 )
 
@@ -18,11 +18,11 @@ type User struct {
 // UsersCount get users count
 func UsersCount() int32 {
 	var cnt int32
-	mysql.Client.Model(&User{}).Count(&cnt)
+	datastore.MyDB.Model(&User{}).Count(&cnt)
 	return cnt
 }
 
 // Create a user
 func (u *User) Create() {
-	mysql.Client.Create(u)
+	datastore.MyDB.Create(u)
 }
