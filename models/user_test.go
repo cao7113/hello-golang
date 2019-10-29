@@ -2,6 +2,8 @@ package models
 
 import (
 	"testing"
+	"fmt"
+	"time"
 
 	// "github.com/cao7113/golang/config"
 	ds "github.com/cao7113/golang/datastore"
@@ -25,14 +27,17 @@ import (
 
 func TestUserCount1(t *testing.T) {
 
-	ds.SetupMysql()
+	// ds.SetupMysql()
+
+	fmt.Printf("\n====3333 %+v", ds.MyDB)
 	cnt1 := UsersCount()
 
-	assert.Equal(t, 0, cnt1)
-	// user := &User{
-	// 	Name: "test1",
-	// }
-	// user.Create()
+	// assert.Equal(t, 0, cnt1)
+	user := &User{
+		Name: "test1",
+		Email: time.Now().String(),
+	}
+	user.Create()
 	cnt2 := UsersCount()
 	assert.Equal(t, cnt1+1, cnt2)
 }

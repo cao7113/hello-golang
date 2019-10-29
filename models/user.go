@@ -16,8 +16,8 @@ type User struct {
 }
 
 // UsersCount get users count
-func UsersCount() int32 {
-	var cnt int32
+func UsersCount() int {
+	var cnt int
 	datastore.MyDB.Model(&User{}).Count(&cnt)
 	return cnt
 }

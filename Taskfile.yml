@@ -80,9 +80,9 @@ tasks:
   db-reset:
     cmds:
       # call tasks serially other than concurrently
-      - task: datastore-drop
-      - task: datastore-create
-      - task: datastore-up
+      - task: db-drop
+      - task: db-create
+      - task: db-up
   db-dbs:
     desc: show databases
     cmds:
