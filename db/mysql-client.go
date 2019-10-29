@@ -1,18 +1,19 @@
 package db
 
 import (
+	"github.com/cao7113/golang/config"
+	"github.com/jinzhu/gorm"
 	_ "github.com/jinzhu/gorm/dialects/mysql"
 )
 
-// user:password@(localhost)/dbname?charset=utf8&parseTime=True&loc=Local
-const dbURL = "user:password@/dbname?charset=utf8&parseTime=True&loc=Local"
+var dbURL = config.Settings.DbURL
 
 var myDb interface{}
 
-// func init() {
-// 	myDb, err := gorm.Open("mysql", dbURL)
-// 	defer myDb.Close()
-// 	if err != nil {
-// 		// todo
-// 	}
-// }
+func init() {
+	myDb, err := gorm.Open("mysql", dbURL)
+	defer myDb.Close()
+	if err != nil {
+		// todo
+	}
+}

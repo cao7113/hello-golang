@@ -57,23 +57,7 @@ tasks:
     cmds:
       - docker-compose up
 
-  install:
-    cmds:
-      - brew install golang
-
-  install-bloomrpc:
-    desc: install rpc GUI client
-    cmds:
-      - brew cask install bloomrpc
-
-  install-direnv:
-    desc: install .envrc manager
-    cmds:
-      - brew install direnv
-      - echo hook your shell as https://direnv.net/docs/hook.html
-
   ## DB
-  # use https://github.com/golang-migrate/migrate/tree/master/cmd/migrate
   db:
     desc: go db session
     cmds:
@@ -107,7 +91,7 @@ tasks:
     desc: show tables
     cmds:
       - mysql -uroot {{.TEST_DB_NAME}} -e "show full tables"
-  install-mig:
+  install-db-mig:
     desc: install migrations by https://github.com/golang-migrate/migrate/tree/master/cmd/migrate
     cmds:
       - echo should implement in Taskfile_{{GOOS}}.yml

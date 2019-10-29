@@ -2,9 +2,24 @@
 version: '2'
 
 tasks:
-  ## db
-  install-mig:
+
+  install:
+    cmds:
+      - brew install golang
+
+  install-direnv:
+    desc: install .envrc manager
+    cmds:
+      - brew install direnv
+      - echo hook your shell as https://direnv.net/docs/hook.html
+
+  install-db-mig:
     desc: install migrations
     cmds:
       - which migrate || brew install golang-migrate
       - migrate --version
+
+  install-bloomrpc:
+    desc: install GUI client for gRPC
+    cmds:
+      - brew cask install bloomrpc
