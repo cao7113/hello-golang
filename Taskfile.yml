@@ -17,9 +17,9 @@ tasks:
     silent: true
 
   test:
-    desc: go test
+    desc: go .git-test
     cmds:
-      - go test $GOMODNAME/trytest -v
+      - go .git-test $GOMODNAME/trytest -v
   
   lint:
     desc: lint code
@@ -59,7 +59,7 @@ tasks:
 
   ## DB
   db:
-    desc: go db session
+    desc: go datastore session
     cmds:
       - mysql -uroot {{.TEST_DB_NAME}}
   db-create:
@@ -68,21 +68,21 @@ tasks:
   db-drop:
     cmds:
       - mysql -uroot -e "drop database if exists \`{{.TEST_DB_NAME}}\`;"
-  # migrate create -ext sql -dir db/migrate create_users_table
+  # migrate create -ext sql -dir datastore/migrate create_users_table
   db-up:
     desc: migrate up
     cmds:
-      - migrate -database $TEST_DB_URL -path db/migrate up
+      - migrate -database $TEST_DB_URL -path datastore/migrate up
   db-down:
     desc: migrate down
     cmds:
-      - migrate -database $TEST_DB_URL -path db/migrate down
+      - migrate -database $TEST_DB_URL -path datastore/migrate down
   db-reset:
     cmds:
       # call tasks serially other than concurrently
-      - task: db-drop
-      - task: db-create
-      - task: db-up
+      - task: datastore-drop
+      - task: datastore-create
+      - task: datastore-up
   db-dbs:
     desc: show databases
     cmds:

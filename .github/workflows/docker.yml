@@ -17,8 +17,8 @@ jobs:
       uses: actions/checkout@v1
       with:
         fetch-depth: 1
-    - name: run db service
+    - name: run datastore service
       run: |
         docker-compose up -d
-    - name: test service
+    - name: .git-test service
       run: curl -Lv localhost:8080

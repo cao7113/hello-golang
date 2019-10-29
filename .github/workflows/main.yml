@@ -25,7 +25,7 @@ jobs:
         go get -u -v golang.org/x/lint/golint 
         task lint
     - name: Test
-      run: go test github.com/cao7113/golang/try
+      run: go .git-test github.com/cao7113/golang/try
     # todo: coverage
 
     # - name: Copy .netrc to home directory

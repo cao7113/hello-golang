@@ -21,13 +21,13 @@ services:
   #   environment:
   #     MYSQL_ROOT_PASSWORD: root
   #   volumes:
-  #      - db-data:/var/lib/mysql/data
+  #      - datastore-data:/var/lib/mysql/data
 
   # https://hub.docker.com/r/arey/mysql-client
   # $ docker run -v <path to sql>:/sql --link <mysql server container name>:mysql -it arey/mysql-client -h mysql -p <password> -D <database name> -e "source /sql/<your sql file>"
   mycli:
     image: arey/mysql-client
-    command: mysql -h db -proot -uroot -D mysql -e "show databases"
+    command: mysql -h datastore -proot -uroot -D mysql -e "show databases"
     depends_on: 
     - db
 

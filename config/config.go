@@ -12,7 +12,7 @@ type config struct {
 	DbURL string
 }
 
-// AppEnv app running environment
+// AppEnv app running env
 var AppEnv string
 
 // Settings config from env
