@@ -21,6 +21,7 @@ tasks:
       - go test ./... -v
 
   ## Golangci-lint
+  # todo install cilint
   lint:
     desc: run golangci-lint
     cmds:
@@ -47,7 +48,19 @@ tasks:
   ## docker
   dkcom-up:
     cmds:
-      - docker-compose up
+      - docker-compose up db -d
+  dk-build:
+    cmds:
+      - docker build -t golang-try
+  dk-run:
+    deps:
+      - dk-build
+    cmds:
+      - docker run --rm golang-try
+  # testing
+  dk-test:
+    cmds:
+      - docker build -t golang-test -f Dockerfile.testing .
 
   ## DB
   db:

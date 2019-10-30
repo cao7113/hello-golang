@@ -40,5 +40,6 @@ services:
     depends_on: 
     - db
 
-  test-app:
-    build: .
+  # test-app:
+  #   build: .
+  #   Dockerfile: Docker.testing
