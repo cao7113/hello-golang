@@ -3,11 +3,12 @@ package models
 import (
 	"time"
 
-	"github.com/cao7113/golang/datastore"
-	
+	ds "github.com/cao7113/golang/datasource"
+
 	"github.com/jinzhu/gorm"
 )
 
+// User user
 type User struct {
 	gorm.Model
 	Name     string
@@ -18,11 +19,11 @@ type User struct {
 // UsersCount get users count
 func UsersCount() int {
 	var cnt int
-	datastore.MyDB.Model(&User{}).Count(&cnt)
+	ds.MyDB.Model(&User{}).Count(&cnt)
 	return cnt
 }
 
 // Create a user
 func (u *User) Create() {
-	datastore.MyDB.Create(u)
+	ds.MyDB.Create(u)
 }

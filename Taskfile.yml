@@ -9,6 +9,7 @@ env:
 vars:
   GREETING: Hello, Golang!
   TEST_DB_NAME: golang_test
+  mig_path: datasource/migrate
 
 tasks:
   hello:
@@ -59,7 +60,7 @@ tasks:
 
   ## DB
   db:
-    desc: go datastore session
+    desc: enter db session
     cmds:
       - mysql -uroot {{.TEST_DB_NAME}}
   db-create:
@@ -68,15 +69,15 @@ tasks:
   db-drop:
     cmds:
       - mysql -uroot -e "drop database if exists \`{{.TEST_DB_NAME}}\`;"
-  # migrate create -ext sql -dir datastore/migrate create_users_table
+  # migrate create -ext sql -dir {{.mig_path}} create_users_table
   db-up:
     desc: migrate up
     cmds:
-      - migrate -database $TEST_DB_URL -path datastore/migrate up
+      - migrate -database $TEST_DB_URL -path {{.mig_path}} up
   db-down:
     desc: migrate down
     cmds:
-      - migrate -database $TEST_DB_URL -path datastore/migrate down
+      - migrate -database $TEST_DB_URL -path {{.mig_path}} down
   db-reset:
     cmds:
       # call tasks serially other than concurrently
