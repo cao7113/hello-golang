@@ -51,6 +51,10 @@ func init() {
 	Settings = &config{
 		DbURL: getEnv("DB_URL", ""),
 	}
+	Logger.Infof("in env: %s", AppEnv)
+	if !IsProd() {
+		ConfInfo()
+	}
 }
 
 // ConfInfo conf
@@ -79,7 +83,7 @@ func loadDotEnvFile(filePath string) bool {
 	if err := godotenv.Load(filePath); err != nil {
 		Logger.Errorf("load %s error: %+v", filePath, err)
 	} else {
-		Logger.Infof("loaded file: %s", filePath)
+		Logger.Debugf("loaded file: %s", filePath)
 	}
 	return true
 }

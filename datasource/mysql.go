@@ -18,8 +18,6 @@ func init() {
 	log := config.Logger
 	dsn := config.Settings.DbURL
 	var err error
-
-	log.Infof("==mysql dsn=%s", dsn)
 	MyDB, err = gorm.Open("mysql", dsn)
 	if err != nil {
 		log.Fatalln(err)
@@ -30,5 +28,5 @@ func init() {
 	MyDB.DB().SetMaxIdleConns(100)
 	MyDB.DB().SetConnMaxLifetime(5 * time.Minute)
 
-	// log.Debugf("db: %+v", MyDB)
+	// Logger.Debugf("db: %+v", MyDB)
 }
