@@ -18,9 +18,9 @@ tasks:
     silent: true
 
   test:
-    desc: go .git-test
+    desc: run go test
     cmds:
-      - go .git-test $GOMODNAME/trytest -v
+      - go test ./... -v
   
   lint:
     desc: lint code
