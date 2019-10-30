@@ -1,6 +1,7 @@
 package config_test
 
 import (
+	"fmt"
 	"os"
 	"testing"
 
@@ -8,13 +9,16 @@ import (
 	"github.com/stretchr/testify/assert"
 )
 
-func TestAppEnv(t *testing.T) {
-	os.Setenv("APP_ENV", "")
-	assert.Equal(t, true, config.IsDev())
-}
-
 func TestDbURL(t *testing.T) {
 	url := "mysql://xxx"
 	os.Setenv("DB_URL", url)
 	assert.NotEqual(t, url, config.Settings.DbURL)
+}
+
+func TestConf(t *testing.T) {
+	config.ConfInfo()
+}
+
+func TestAppRoot(t *testing.T) {
+	fmt.Println(config.GetAppRoot())
 }

@@ -18,14 +18,18 @@ tasks:
   test:
     desc: run go test
     cmds:
-      - go test ./... -v
+      # - go test ./... -v
+      - echo env: $APP_ENV
+      - go test ./models -v
+    env:
+      APP_ENV: test
 
   ## Golangci-lint
-  # todo install cilint
   lint:
     desc: run golangci-lint
     cmds:
-      - golangci-lint run ./...
+      - golangci-lint run -v ./...
+      # docker run --rm -v $(pwd):/app -w /app golangci/golangci-lint:v1.21.0 golangci-lint run -v
   lint-try:
     desc: run golangci-lint in trytest
     cmds:
@@ -48,7 +52,7 @@ tasks:
   ## docker
   dkcom-up:
     cmds:
-      - docker-compose up db -d
+      - docker-compose up -d
   dk-build:
     cmds:
       - docker build -t golang-try
@@ -57,10 +61,16 @@ tasks:
       - dk-build
     cmds:
       - docker run --rm golang-try
-  # testing
-  dk-test:
+  dk-build-test:
     cmds:
       - docker build -t golang-test -f Dockerfile.testing .
+  dk-test:
+    cmds:
+      - docker-compose up -d db
+      - task: db-reset
+      - task: test
+    env:
+      APP_ENV: test
 
   ## DB
   db:

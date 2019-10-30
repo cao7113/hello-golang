@@ -1,16 +1,12 @@
 package config
 
 import (
-	"log"
 	"os"
+	"path/filepath"
 
 	"github.com/joho/godotenv"
+	"github.com/sirupsen/logrus"
 )
-
-// https://dev.to/craicoverflow/a-no-nonsense-guide-to-environment-variables-in-go-a2f
-type config struct {
-	DbURL string
-}
 
 // AppEnv app running env
 var AppEnv string
@@ -18,17 +14,38 @@ var AppEnv string
 // Settings config from env
 var Settings *config
 
+// RawLogger a new instance of the logger. You can have any number of instances.
+var RawLogger *logrus.Logger
+
+// Logger logger
+var Logger *logrus.Entry
+
+// https://dev.to/craicoverflow/a-no-nonsense-guide-to-environment-variables-in-go-a2f
+type config struct {
+	DbURL string
+}
+
 func init() {
 	AppEnv = os.Getenv("APP_ENV")
 	if AppEnv == "" {
 		AppEnv = "development"
 	}
 
-	// load config from .env
-	if err := godotenv.Load("../.env"); err != nil {
-		log.Println("Warning: no .env file found")
+	RawLogger = logrus.New()
+	// 设置将日志输出到标准输出（默认的输出为stderr,标准错误）
+	RawLogger.Out = os.Stdout
+	if IsProd() {
+		RawLogger.Formatter = &logrus.JSONFormatter{}
+	}
+	if IsDev() {
+		RawLogger.Level = logrus.DebugLevel
 	} else {
-		log.Println("==loaded .env")
+		RawLogger.Level = logrus.InfoLevel
+	}
+	Logger = RawLogger.WithFields(logrus.Fields{"f1": "t1"})
+
+	if !IsProd() || os.Getenv("USE_DOT_ENV") != "" {
+		loadDotEnvFiles()
 	}
 
 	Settings = &config{
@@ -36,19 +53,79 @@ func init() {
 	}
 }
 
+// ConfInfo conf
+func ConfInfo() {
+	tmpl := `
+AppEnv: %s
+Settings: %+v
+`
+	Logger.Infof(tmpl, AppEnv, Settings)
+}
+
+func loadDotEnvFiles() {
+	root := GetAppRoot()
+	// top first
+	loadDotEnvFile(root + "/.env." + AppEnv + ".local")
+	loadDotEnvFile(root + "/.env." + AppEnv)
+	loadDotEnvFile(root + "/.env")
+}
+
+func loadDotEnvFile(filePath string) bool {
+	if !fileExists(filePath) {
+		// Logger.Infof("Not found: %s", filePath)
+		return false
+	}
+
+	if err := godotenv.Load(filePath); err != nil {
+		Logger.Errorf("load %s error: %+v", filePath, err)
+	} else {
+		Logger.Infof("loaded file: %s", filePath)
+	}
+	return true
+}
+
+// GetAppRoot get
+func GetAppRoot() string {
+	wd, err := os.Getwd()
+	if err != nil {
+		panic("Can not get working dir")
+	}
+
+	for {
+		file := filepath.Join(wd, "go.mod")
+		if fileExists(file) {
+			return wd
+		} else {
+			wd = filepath.Dir(wd)
+		}
+
+		if "/" == wd {
+			panic("Not found root")
+		}
+	}
+}
+
+func fileExists(filename string) bool {
+	info, err := os.Stat(filename)
+	if os.IsNotExist(err) {
+		return false
+	}
+	return !info.IsDir()
+}
+
 // IsTest is in testing?
 func IsTest() bool {
-	return AppEnv == "testing"
+	return AppEnv == "test"
 }
 
 // IsDev is in develop env?
 func IsDev() bool {
-	return AppEnv == "development"
+	return AppEnv == "development" || AppEnv == "dev"
 }
 
 // IsProd is in production?
 func IsProd() bool {
-	return AppEnv == "production"
+	return AppEnv == "production" || AppEnv == "prod"
 }
 
 // Simple helper function to read an environment or return a default value

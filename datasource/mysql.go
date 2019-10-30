@@ -18,12 +18,13 @@ func init() {
 	log := config.Logger
 	dsn := config.Settings.DbURL
 	var err error
+
+	log.Infof("==mysql dsn=%s", dsn)
 	MyDB, err = gorm.Open("mysql", dsn)
 	if err != nil {
 		log.Fatalln(err)
 	}
 	// defer MyDB.Close()
-	log.Debugln("==mysql dsn=%s", dsn)
 
 	MyDB.DB().SetMaxOpenConns(300)
 	MyDB.DB().SetMaxIdleConns(100)
