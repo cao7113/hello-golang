@@ -3,42 +3,33 @@ version: '2'
 
 env:
   GOMODNAME: "github.com/cao7113/golang"
-  # todo
-  # TEST_DB_NAME: golang_test
   TEST_DB_URL: mysql://root:@tcp/golang_test?parseTime=true
 vars:
-  GREETING: Hello, Golang!
-  TEST_DB_NAME: golang_test
+  greeting: Hello, Golang!
+  test_db_name: golang_test
   mig_path: datasource/migrate
 
 tasks:
   hello:
     cmds:
-      - echo "{{.GREETING}}"
+      - echo "{{.greeting}}"
     silent: true
 
   test:
     desc: run go test
     cmds:
       - go test ./... -v
-  
-  lint:
-    desc: lint code
-    cmds:
-      - |
-        PKG_LIST=$(go list $GOMODNAME/... | grep -v /vendor/)
-        golint -set_exit_status ${PKG_LIST}
 
   ## Golangci-lint
-  cilint:
+  lint:
     desc: run golangci-lint
     cmds:
       - golangci-lint run ./...
-  cilint-try:
+  lint-try:
     desc: run golangci-lint in trytest
     cmds:
       - golangci-lint run trytest
-  cilinter:
+  linters:
     desc: golangci-lint
     cmds:
       # https://raw.githubusercontent.com/golangci/golangci-lint/v1.20.1/.golangci.example.yml
@@ -62,13 +53,13 @@ tasks:
   db:
     desc: enter db session
     cmds:
-      - mysql -uroot {{.TEST_DB_NAME}}
+      - mysql -uroot {{.test_db_name}}
   db-create:
     cmds:
-      - mysql -uroot -e "create database if not exists \`{{.TEST_DB_NAME}}\`;"
+      - mysql -uroot -e "create database if not exists \`{{.test_db_name}}\`;"
   db-drop:
     cmds:
-      - mysql -uroot -e "drop database if exists \`{{.TEST_DB_NAME}}\`;"
+      - mysql -uroot -e "drop database if exists \`{{.test_db_name}}\`;"
   # migrate create -ext sql -dir {{.mig_path}} create_users_table
   db-up:
     desc: migrate up
@@ -91,7 +82,7 @@ tasks:
   db-tables:
     desc: show tables
     cmds:
-      - mysql -uroot {{.TEST_DB_NAME}} -e "show full tables"
+      - mysql -uroot {{.test_db_name}} -e "show full tables"
   install-db-mig:
     desc: install migrations by https://github.com/golang-migrate/migrate/tree/master/cmd/migrate
     cmds:
