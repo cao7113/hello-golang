@@ -5,6 +5,8 @@ import (
 
 	"github.com/cao7113/golang/config"
 	"github.com/jinzhu/gorm"
+
+	// nolint
 	_ "github.com/jinzhu/gorm/dialects/mysql"
 )
 

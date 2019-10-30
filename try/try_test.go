@@ -1,6 +1,8 @@
 package try
 
-import "testing"
+import (
+	"testing"
+)
 
 func TestTry(t *testing.T) {
 	tests := []struct {
