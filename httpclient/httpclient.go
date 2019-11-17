@@ -16,6 +16,6 @@ func req() {
 		body, _ := ioutil.ReadAll(response.Body)
 		fmt.Println(string(body))
 	} else {
-		fmt.Println("==not 200")
+		fmt.Println("==non 200")
 	}
 }

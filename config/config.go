@@ -74,10 +74,10 @@ func loadDotEnvFiles() {
 	loadDotEnvFile(root + "/.env")
 }
 
-func loadDotEnvFile(filePath string) bool {
+func loadDotEnvFile(filePath string) {
 	if !fileExists(filePath) {
 		// Logger.Infof("Not found: %s", filePath)
-		return false
+		return
 	}
 
 	if err := godotenv.Load(filePath); err != nil {
@@ -85,7 +85,6 @@ func loadDotEnvFile(filePath string) bool {
 	} else {
 		Logger.Debugf("loaded file: %s", filePath)
 	}
-	return true
 }
 
 // GetAppRoot get
@@ -99,9 +98,9 @@ func GetAppRoot() string {
 		file := filepath.Join(wd, "go.mod")
 		if fileExists(file) {
 			return wd
-		} else {
-			wd = filepath.Dir(wd)
 		}
+
+		wd = filepath.Dir(wd)
 
 		if "/" == wd {
 			panic("Not found root")
