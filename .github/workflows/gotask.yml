@@ -32,3 +32,9 @@ jobs:
       run: |
         which task
         task --version
+    - name: Check out code
+      uses: actions/checkout@v1
+      with:
+        fetch-depth: 1
+    - name: try task
+      run: task hello
