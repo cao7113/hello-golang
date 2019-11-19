@@ -9,8 +9,8 @@ jobs:
     name: Golang
     runs-on: ubuntu-18.04
     steps:
-    - name: Install Task tool
-      run: sudo snap install task --classic
+    - name: Install Task
+      uses: Arduino/actions/setup-taskfile@master
     - name: Set up Go 1.13
       uses: actions/setup-go@v1
       with:
@@ -27,8 +27,8 @@ jobs:
     - name: Lint
       run: task lint
 
-#    - name: Test
-#      run: task dk-test
+    # - name: Test
+    #   run: task dk-test
 
     # todo: coverage
 
