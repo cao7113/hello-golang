@@ -23,9 +23,12 @@ jobs:
     #     curl -sL https://taskfile.dev/install.sh | sh
     #     export PATH=$PATH:$PWD/bin
     #     echo PATH=$PATH
-    #     which task
-    #     task --version
     #     ls -al bin
     #     pwd
     ## bug: export PATH missing in next step?
     ## always use `bin/task xxx`?
+
+    - name: test task env
+      run: |
+        which task
+        task --version
