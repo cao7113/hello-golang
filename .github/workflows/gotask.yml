@@ -22,7 +22,6 @@ jobs:
     #   run: |
     #     curl -sL https://taskfile.dev/install.sh | sh
     #     export PATH=$PATH:$PWD/bin
-    #     echo PATH=$PATH
     #     ls -al bin
     #     pwd
     ## bug: export PATH missing in next step?
@@ -30,8 +29,11 @@ jobs:
 
     - name: test task env
       run: |
+        pwd
         which task
         task --version
+        echo PATH=$PATH
+
     - name: Check out code
       uses: actions/checkout@v1
       with:
