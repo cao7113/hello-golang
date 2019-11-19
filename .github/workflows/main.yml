@@ -1,5 +1,5 @@
 # https://help.github.com/en/github/automating-your-workflow-with-github-actions/workflow-syntax-for-github-actions
-name: Golang Actions
+name: Main Actions
 on:
   push:
     branches:
@@ -9,26 +9,26 @@ jobs:
     name: Golang
     runs-on: ubuntu-18.04
     steps:
-    - name: install Task tool
+    - name: Install Task tool
       run: sudo snap install task --classic
+    - name: Set up Go 1.13
+      uses: actions/setup-go@v1
+      with:
+        go-version: '1.13'
     - name: Install golangci-lint
       run: |
         curl -sfL https://raw.githubusercontent.com/golangci/golangci-lint/master/install.sh | sh -s v1.20.0
         sudo mv bin/golangci-lint /usr/local/bin
         golangci-lint --version
-    - name: Set up Go 1.13
-      uses: actions/setup-go@v1
-      with:
-        go-version: '1.13'
-    - name: Check out code into the Go module directory
+    - name: Check out code
       uses: actions/checkout@v1
       with:
         fetch-depth: 1
     - name: Lint
       run: task lint
 
-    - name: Test
-      run: task dk-test
+#    - name: Test
+#      run: task dk-test
 
     # todo: coverage
 
