@@ -1,12 +1,12 @@
 # https://help.github.com/en/github/automating-your-workflow-with-github-actions/workflow-syntax-for-github-actions
-name: Task Actions
+name: GoTask Actions
 on:
   push:
     branches:
     - ci-gotask
 jobs:
   gotask:
-    name: Go task tool
+    name: Try GoTask tools
     runs-on: ubuntu-18.04
     steps:
     - name: install Task tool by os pkg
