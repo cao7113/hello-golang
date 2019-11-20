@@ -20,5 +20,5 @@ jobs:
     - name: run datastore service
       run: |
         docker-compose up -d
-    - name: .git-test service
+    - name: test docker service
       run: curl -Lv localhost:8080
