@@ -8,6 +8,16 @@ import (
 	"github.com/stretchr/testify/assert"
 )
 
+type User struct {
+	Name  string `json:"name"`
+	Email string `json:"email,omitempty"`
+}
+
+type UserBlog struct {
+	User
+	Title string `json:"title"`
+}
+
 func TestNestingJson(t *testing.T) {
 	buser := &UserBlog{
 		User: User{
