@@ -7,11 +7,11 @@ type User struct {
 	Email string `json:"email,omitempty"`
 }
 
-type BlogUser struct {
+type UserBlog struct {
 	User
 	Title string `json:"title"`
 }
 
-func Hi(user BlogUser) {
+func Hi(user UserBlog) {
 	fmt.Printf("%+v", user)
 }

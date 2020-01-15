@@ -9,7 +9,7 @@ import (
 )
 
 func TestNestingJson(t *testing.T) {
-	buser := &BlogUser{
+	buser := &UserBlog{
 		User: User{
 			Name:  "a",
 			Email: "b@c.com",
@@ -24,7 +24,7 @@ func TestNestingJson(t *testing.T) {
 	jstr := `{"name":"a","email":"b@c.com","title":"test"}`
 	assert.Equal(t, string(s), jstr)
 
-	buser1 := &BlogUser{}
+	buser1 := &UserBlog{}
 	json.Unmarshal([]byte(jstr), buser1)
 	assert.Equal(t, buser1.Name, "a")
 	assert.Equal(t, buser1.Title, "test")
@@ -34,7 +34,7 @@ func TestNestingJson(t *testing.T) {
 
 // json:"email,omitempty"`
 func TestOmitJson(t *testing.T) {
-	buser := &BlogUser{
+	buser := &UserBlog{
 		User: User{
 			Name: "a",
 		},
@@ -48,7 +48,7 @@ func TestOmitJson(t *testing.T) {
 	jstr := `{"name":"a","title":"test"}`
 	assert.Equal(t, string(s), jstr)
 
-	buser = &BlogUser{
+	buser = &UserBlog{
 		Title: "test",
 	}
 	s, err = json.Marshal(buser)
