@@ -1,4 +1,0 @@
-#!/usr/bin/env bash 
-
-export GOPATH="/Users/caoruijian/go"
-export PATH="$PATH:$(go env GOPATH)/bin"

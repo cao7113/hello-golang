@@ -17,6 +17,16 @@ tasks:
       - echo "{{.GREETING}}"
     silent: true
 
+  # corbra
+  cb-hi:
+    name: run cobra hello
+    cmds:
+      - go run cobra/hello/main.go -v
+  cb-try:
+    name: run cobra hello try
+    cmds:
+      - go run cobra/hello/main.go try
+
   info:
     cmds:
     - |
@@ -29,10 +39,6 @@ tasks:
     cmds:
       - golangci-lint run -v ./...
       # docker run --rm -v $(pwd):/app -w /app golangci/golangci-lint:v1.21.0 golangci-lint run -v
-  lint-try:
-    desc: run golangci-lint in trytest
-    cmds:
-      - golangci-lint run trytest
   linters:
     desc: list current golangci-lint linters
     cmds:

@@ -6,6 +6,7 @@ require (
 	github.com/caarlos0/env/v6 v6.1.0
 	github.com/jinzhu/gorm v1.9.11
 	github.com/joho/godotenv v1.3.0
+	github.com/magiconair/properties v1.8.1
 	github.com/mitchellh/go-homedir v1.1.0
 	github.com/sirupsen/logrus v1.2.0
 	github.com/spf13/cobra v0.0.5
