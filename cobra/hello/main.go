@@ -21,7 +21,7 @@ THE SOFTWARE.
 */
 package main
 
-import "github.com/cao7113/golang/cobra/hello/cmd"
+import "github.com/cao7113/hellogolang/cobra/hello/cmd"
 
 func main() {
   cmd.Execute()

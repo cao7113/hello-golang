@@ -1,8 +1,8 @@
 package main
 
 import (
-	"github.com/cao7113/golang/config"
-	"github.com/cao7113/golang/try"
+	"github.com/cao7113/hellogolang/config"
+	"github.com/cao7113/hellogolang/try"
 )
 
 func main() {

@@ -9,7 +9,7 @@ vars:
   DB_URL: mysql://{{.DB_USER}}:{{.DB_PASSWORD}}@tcp/{{.DB_NAME}}?parseTime=true
   MYSQL_CLI_OPTS: "-u{{.DB_USER}} "
   MIG_PATH: datasource/migrate
-  GOMODNAME: "github.com/cao7113/golang"
+  GOMODNAME: "github.com/cao7113/hello-golang"
 
 tasks:
   hello:
@@ -73,15 +73,15 @@ tasks:
       - docker-compose up -d
   dk-build:
     cmds:
-      - docker build -t golang-try
+      - docker build -t hello-golang-try
   dk-run:
     deps:
       - dk-build
     cmds:
-      - docker run --rm golang-try
+      - docker run --rm hello-golang-try
   dk-build-test:
     cmds:
-      - docker build -t golang-test -f Dockerfile.testing .
+      - docker build -t hello-golang-test -f Dockerfile.testing .
   dk-test:
     cmds:
       - docker-compose up -d db
@@ -125,7 +125,7 @@ tasks:
     cmds:
       - mysql -uroot {{.DB_NAME}} -e "show full tables"
   install-db-mig:
-    desc: install migrations by https://github.com/golang-migrate/migrate/tree/master/cmd/migrate
+    desc: install migrations by https://github.com/hello-golang-migrate/migrate/tree/master/cmd/migrate
     cmds:
       - echo should implement in Taskfile_{{GOOS}}.yml
 

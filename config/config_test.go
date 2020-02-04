@@ -5,7 +5,7 @@ import (
 	"os"
 	"testing"
 
-	"github.com/cao7113/golang/config"
+	"github.com/cao7113/hellogolang/config"
 	"github.com/stretchr/testify/assert"
 )
 

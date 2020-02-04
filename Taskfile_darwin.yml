@@ -5,7 +5,7 @@ tasks:
 
   install:
     cmds:
-      - brew install golang
+      - brew install hello-golang
   
   install-cilint:
     name: install cilint by https://github.com/golangci/golangci-lint#macos
@@ -22,7 +22,7 @@ tasks:
   install-db-mig:
     desc: install migrations
     cmds:
-      - which migrate || brew install golang-migrate
+      - which migrate || brew install hello-golang-migrate
       - migrate --version
 
   install-bloomrpc:

@@ -3,7 +3,7 @@ package datasource
 import (
 	"time"
 
-	"github.com/cao7113/golang/config"
+	"github.com/cao7113/hellogolang/config"
 	"github.com/jinzhu/gorm"
 
 	// nolint
