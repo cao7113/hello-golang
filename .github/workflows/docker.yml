@@ -1,0 +1,24 @@
+# https://help.github.com/en/github/automating-your-workflow-with-github-actions/workflow-syntax-for-github-actions
+name: Docker Actions
+on:
+  push:
+    branches:
+    - ci-docker
+jobs:
+  docker:
+    name: Docker
+    runs-on: ubuntu-18.04
+    steps:
+    - name: inspect docker env
+      run: |
+        docker version
+        docker-compose version
+    - name: Check out code
+      uses: actions/checkout@v1
+      with:
+        fetch-depth: 1
+    - name: run datastore service
+      run: |
+        docker-compose up -d
+    - name: test docker service
+      run: curl -Lv localhost:8080

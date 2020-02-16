@@ -1,0 +1,42 @@
+# https://help.github.com/en/github/automating-your-workflow-with-github-actions/workflow-syntax-for-github-actions
+name: GoTask Actions
+on:
+  push:
+    branches:
+    - ci-gotask
+jobs:
+  gotask:
+    name: Try GoTask tools
+    runs-on: ubuntu-18.04
+    steps:
+    # recommend way in github CI https://taskfile.dev/#/installation?id=github-actions
+    - name: Install Task
+      uses: Arduino/actions/setup-taskfile@master
+
+    # - name: install Task using os package
+    #   # can use sudo!!!
+    #   run: sudo snap install task --classic
+    
+    ## https://taskfile.dev/#/installation?id=install-script
+    # - name: Install Task using 
+    #   run: |
+    #     curl -sL https://taskfile.dev/install.sh | sh
+    #     export PATH=$PATH:$PWD/bin
+    #     ls -al bin
+    #     pwd
+    ## bug: export PATH missing in next step?
+    ## always use `bin/task xxx`?
+
+    - name: test task env
+      run: |
+        pwd
+        which task
+        task --version
+        echo PATH=$PATH
+
+    - name: Check out code
+      uses: actions/checkout@v1
+      with:
+        fetch-depth: 1
+    - name: try task
+      run: task hello

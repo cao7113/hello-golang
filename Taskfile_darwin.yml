@@ -1,0 +1,40 @@
+# https://taskfile.dev
+version: '2'
+
+tasks:
+
+  install:
+    cmds:
+      - brew install hello-golang
+  
+  install-cilint:
+    name: install cilint by https://github.com/golangci/golangci-lint#macos
+    cmds:
+      - brew install golangci/tap/golangci-lint
+      - brew upgrade golangci/tap/golangci-lint
+
+  install-direnv:
+    desc: install .envrc manager
+    cmds:
+      - brew install direnv
+      - echo hook your shell as https://direnv.net/docs/hook.html
+
+  install-db-mig:
+    desc: install migrations
+    cmds:
+      - which migrate || brew install hello-golang-migrate
+      - migrate --version
+
+  # gRPC
+  install-bloomrpc:
+    desc: install GUI client for gRPC
+    cmds:
+      - brew cask install bloomrpc
+
+  install-grpc:
+    cmds:
+      # protoc, pb compiler and plugins
+      - brew install protobuf
+      - brew install protoc-gen-go
+      - which protoc protoc-gen-go
+      # - brew install prototool

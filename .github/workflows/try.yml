@@ -1,0 +1,19 @@
+# https://help.github.com/en/github/automating-your-workflow-with-github-actions/workflow-syntax-for-github-actions
+name: Try Actions
+on:
+  push:
+    branches:
+    - ci-try
+jobs:
+  try: # job id
+    name: Try actions env
+    runs-on: ubuntu-18.04
+    steps:
+    - name: inspect env
+      run: printenv | sort
+    - name: Run a one-line script
+      run: echo Hello, world!
+    - name: Run a multi-line script
+      run: |
+        echo Add other actions to build,
+        echo test, and deploy your project.

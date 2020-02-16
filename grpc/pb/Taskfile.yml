@@ -1,0 +1,23 @@
+# https://taskfile.dev
+version: '2'
+tasks:
+  # pb.user
+  cuser:
+    desc: compile user
+    cmds:
+      - protoc --go_out=plugins=grpc:. user/user.proto
+  tuser:
+    cmds:
+      #- go test
+
+  # pb.blog ref pb.user
+  cblog:
+    desc: compile blog
+    cmds:
+      - protoc --go_out=plugins=grpc:. blog/*.proto
+
+  # ref google/protobuf
+  caccount:
+    desc: compile account
+    cmds:
+      - protoc --go_out=plugins=grpc:. account/*.proto

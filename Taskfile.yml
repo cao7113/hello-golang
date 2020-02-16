@@ -1,0 +1,150 @@
+# https://taskfile.dev
+version: '2'
+
+vars:
+  GREETING: Hello, Golang!
+  DB_USER: root
+  DB_PASSWORD: 
+  DB_NAME: golang_test
+  DB_URL: mysql://{{.DB_USER}}:{{.DB_PASSWORD}}@tcp/{{.DB_NAME}}?parseTime=true
+  MYSQL_CLI_OPTS: "-u{{.DB_USER}} "
+  MIG_PATH: datasource/migrate
+  GOMODNAME: "github.com/cao7113/hello-golang"
+
+tasks:
+  hello:
+    cmds:
+      - echo "{{.GREETING}}"
+    silent: true
+
+  # corbra
+  cb-hi:
+    name: run cobra hello
+    cmds:
+      - go run cobra/hello/main.go -v
+  cb-try:
+    name: run cobra hello try
+    cmds:
+      - go run cobra/hello/main.go try
+
+  info:
+    cmds:
+    - |
+      echo DB_NAME={{.DB_NAME}}
+      echo DB_URL={{.DB_URL}}
+
+  ## Golangci-lint
+  lint:
+    desc: run golangci-lint
+    cmds:
+      - golangci-lint run -v ./...
+      # docker run --rm -v $(pwd):/app -w /app golangci/golangci-lint:v1.21.0 golangci-lint run -v
+  linters:
+    desc: list current golangci-lint linters
+    cmds:
+      # https://raw.githubusercontent.com/golangci/golangci-lint/v1.20.1/.golangci.example.yml
+      - golangci-lint linters -v
+  init-cilint:
+    desc: init CiLint config
+    cmds:
+    - wget https://raw.githubusercontent.com/golangci/golangci-lint/master/.golangci.example.yml
+
+  test:
+    desc: run go test
+    cmds:
+      # - go test ./... -v
+      - echo env: $APP_ENV
+      - go test ./models -v
+    env:
+      APP_ENV: test
+  test-env:
+    cmds:
+      - go test -v ./tests/env_test.go
+    env:
+      APP_ENV: test
+
+  run:
+    cmds:
+      - go run main.go
+
+  mod:
+    cmds:
+      # - go mod init $GOMODNAME
+      - go mod tidy -v
+    
+  ## docker
+  dkcom-up:
+    cmds:
+      - docker-compose up -d
+  dk-build:
+    cmds:
+      - docker build -t hello-golang-try
+  dk-run:
+    deps:
+      - dk-build
+    cmds:
+      - docker run --rm hello-golang-try
+  dk-build-test:
+    cmds:
+      - docker build -t hello-golang-test -f Dockerfile.testing .
+  dk-test:
+    cmds:
+      - docker-compose up -d db
+      - task: db-reset
+      - task: test
+    env:
+      APP_ENV: test
+
+  ## DB
+  db:
+    desc: enter db session
+    cmds:
+      - mysql -u{{.DB_USER}} {{.DB_NAME}}
+  db-create:
+    cmds:
+      - mysql -u{{.DB_USER}} -e "create database if not exists \`{{.DB_NAME}}\`;"
+  db-drop:
+    cmds:
+      - mysql -u{{.DB_USER}} -e "drop database if exists \`{{.DB_NAME}}\`;"
+  # migrate create -ext sql -dir {{.MIG_PATH}} create_users_table
+  db-up:
+    desc: migrate up
+    cmds:
+      - migrate -database $DB_URL -path {{.MIG_PATH}} up
+  db-down:
+    desc: migrate down
+    cmds:
+      - migrate -database $DB_URL -path {{.MIG_PATH}} down
+  db-reset:
+    cmds:
+      # call tasks serially other than concurrently
+      - task: db-drop
+      - task: db-create
+      - task: db-up
+  db-dbs:
+    desc: show databases
+    cmds:
+      - mysql -uroot -e "show databases"
+  db-tables:
+    desc: show tables
+    cmds:
+      - mysql -uroot {{.DB_NAME}} -e "show full tables"
+  install-db-mig:
+    desc: install migrations by https://github.com/hello-golang-migrate/migrate/tree/master/cmd/migrate
+    cmds:
+      - echo should implement in Taskfile_{{GOOS}}.yml
+
+  ## gore CLI
+  cli:
+    desc: Auto-importing (gore -autoimport), quit using Ctrl+D or :quit or :q
+    cmds:
+      - gore -autoimport
+  install-gore:
+    desc: install https://github.com/motemen/gore
+    cmds:
+      - |
+        # The gore command requires Go tool-chains on runtime, so standalone binary is not distributed.
+        GO111MODULE=off go get -u github.com/motemen/gore/cmd/gore
+        # Make sure $GOPATH/bin is in your $PATH.
+        GO111MODULE=off go get -u github.com/mdempsky/gocode   # for code completion
+        GO111MODULE=off go get -u github.com/k0kubun/pp        # or github.com/davecgh/go-spew/spew

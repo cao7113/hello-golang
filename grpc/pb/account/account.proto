@@ -1,0 +1,20 @@
+syntax = "proto3";
+
+import "google/protobuf/timestamp.proto";
+
+option go_package = "pbaccount";
+package pb.account;
+
+message Account {
+  string name = 1;
+  string email = 2;
+  google.protobuf.Timestamp inserted_at = 3;
+}
+
+message FindRequest {
+  string name = 1;
+}
+
+service Accounter {
+  rpc Find (FindRequest) returns (Account) {}
+}
