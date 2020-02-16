@@ -2,8 +2,9 @@ package dingtalk
 
 import (
 	"encoding/json"
+	"fmt"
 
-	log "github.com/sirupsen/logrus"
+	"github.com/sirupsen/logrus"
 )
 
 type Text struct {
@@ -35,9 +36,17 @@ func SendText(content string, isAtAll bool, mobiles []string) error {
 
 	msgValue, err := json.Marshal(msg)
 	if err != nil {
-		log.Fatal("DingTalk Text json marshal error:", err)
+		logrus.Fatal("DingTalk Text json marshal error:", err)
 		return err
 	}
 
 	return sendRequest(msgValue)
+}
+
+func SendWithTitle(title, msg string, mobiles []string) {
+	content := fmt.Sprintf("%s\n%s", title, msg)
+	err := SendText(content, false, mobiles)
+	if err != nil {
+		logrus.Error(err)
+	}
 }

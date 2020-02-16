@@ -33,6 +33,19 @@ tasks:
       echo DB_NAME={{.DB_NAME}}
       echo DB_URL={{.DB_URL}}
 
+  test-dingtalk:
+    desc: test dingtalk message https://ding-doc.dingtalk.com/doc#/serverapi3/iydd5h
+    cmds:
+      # echo export Atoken=todo-set-your-token
+      - |
+        curl 'https://oapi.dingtalk.com/robot/send?access_token={{.Atoken}}' \
+        -H 'Content-Type: application/json' \
+        -d '{"msgtype": "text", 
+            "text": {
+                  "content": "Up我就是我, 是不一样的烟火"
+            }
+          }'
+
   ## Golangci-lint
   lint:
     desc: run golangci-lint

@@ -5,8 +5,8 @@ import (
 	"io/ioutil"
 	"net/http"
 
-	"github.com/peatio/butterfly/config"
-	log "github.com/sirupsen/logrus"
+	"github.com/cao7113/hellogolang/config"
+	"github.com/sirupsen/logrus"
 )
 
 func sendRequest(msg []byte) error {
@@ -14,7 +14,7 @@ func sendRequest(msg []byte) error {
 	url := config.Config.DingdingURL + "?access_token=" + config.Config.DingdingToken
 	req, err := http.NewRequest("POST", url, r)
 	if err != nil {
-		log.Fatal("DingTalk new request error:", err)
+		logrus.Fatal("DingTalk new request error:", err)
 		return err
 	}
 
@@ -22,12 +22,12 @@ func sendRequest(msg []byte) error {
 	client := &http.Client{}
 	resp, err := client.Do(req)
 	if err != nil {
-		log.Fatal("DingTalk do request error:", err)
+		logrus.Fatal("DingTalk do request error:", err)
 		return err
 	}
 	defer resp.Body.Close()
 
 	body, _ := ioutil.ReadAll(resp.Body)
-	log.Info("DingTalk response body:", string(body))
+	logrus.Info("DingTalk response body:", string(body))
 	return nil
 }
