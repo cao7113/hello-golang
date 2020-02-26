@@ -65,16 +65,28 @@ tasks:
   test:
     desc: run go test
     cmds:
-      # - go test ./... -v
-      - echo env: $APP_ENV
-      - go test ./models -v
+      - go test ./... -v
     env:
       APP_ENV: test
+
   test-env:
     cmds:
       - go test -v ./tests/env_test.go
     env:
       APP_ENV: test
+
+  #  $ go get -u github.com/golang/mock/gomock
+  #  $ go install github.com/golang/mock/mockgen
+  #  mockgen -source=./person/male.go -destination=./mock/male_mock.go -package=mock
+  mockgen:
+    desc: generate mock files by gomock
+    cmds:
+      - go generate ./...
+
+  install-mockgen:
+    desc: install mockgen
+    cmds:
+      - go install github.com/golang/mock/mockgen
 
   run:
     cmds:

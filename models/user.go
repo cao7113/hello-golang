@@ -3,7 +3,7 @@ package models
 import (
 	"time"
 
-	ds "github.com/cao7113/hellogolang/datasource"
+	ds "github.com/cao7113/hellogolang/database"
 
 	"github.com/jinzhu/gorm"
 )
