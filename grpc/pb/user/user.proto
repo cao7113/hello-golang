@@ -3,7 +3,15 @@ syntax = "proto3";
 option go_package = "pbuser";
 package pb.user;
 
+import "google/protobuf/timestamp.proto";
+import "google/protobuf/wrappers.proto";
+
 message User {
   string name = 1;
   string email = 2;
+  bool is_boy = 3;
+  google.protobuf.BoolValue is_girl = 4;
+  google.protobuf.StringValue job = 5;
+
+  google.protobuf.Timestamp updated_at = 11;
 }

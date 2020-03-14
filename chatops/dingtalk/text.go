@@ -40,7 +40,7 @@ func SendText(content string, isAtAll bool, mobiles []string) error {
 		return err
 	}
 
-	return sendRequest(msgValue)
+	return SendRequest(msgValue)
 }
 
 func SendWithTitle(title, msg string, mobiles []string) {

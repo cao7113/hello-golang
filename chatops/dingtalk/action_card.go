@@ -43,5 +43,5 @@ func SendActionCard(title string, text string, btns []Btn) error {
 		return err
 	}
 
-	return sendRequest(msgValue)
+	return SendRequest(msgValue)
 }

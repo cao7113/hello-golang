@@ -37,5 +37,5 @@ func SendMarkdown(title string, text string, isAtAll bool, mobiles []string) err
 		return err
 	}
 
-	return sendRequest(msgValue)
+	return SendRequest(msgValue)
 }

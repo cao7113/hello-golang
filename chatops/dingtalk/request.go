@@ -1,5 +1,5 @@
 package dingtalk
-
+//go:generate mockgen -destination=./mock/dingtalk_sender_mock.go github.com/cao7113/hellogolang/chatops/dingtalk Sender
 import (
 	"bytes"
 	"io/ioutil"
@@ -9,7 +9,14 @@ import (
 	"github.com/sirupsen/logrus"
 )
 
-func sendRequest(msg []byte) error {
+type Sender interface {
+	SendRequest([]byte) error
+}
+
+type DingTalkSender struct {
+}
+
+func SendRequest(msg []byte) error {
 	r := bytes.NewReader(msg)
 	url := config.Config.DingdingURL + "?access_token=" + config.Config.DingdingToken
 	req, err := http.NewRequest("POST", url, r)

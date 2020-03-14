@@ -34,7 +34,7 @@ type EnvConfig struct {
 
 func init() {
 	if AppEnv = strings.ToLower(os.Getenv("APP_ENV")); "" == AppEnv {
-		AppEnv = "development"
+		AppEnv = "test"
 	}
 	logrus.Infof("run in env: %s ", AppEnv)
 

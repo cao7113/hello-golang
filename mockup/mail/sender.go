@@ -1,6 +1,6 @@
 package mail
 
-//go:generate mockgen -destination=../mock/mail_sender_mock.go github.com/cao7113/hellogolang/mockup/mail Sender
+//go:generate mockgen -destination=./mock/mock_mail.go github.com/cao7113/hellogolang/mockup/mail Sender
 
 /*
     go:generate 这条语句，可分为以下部分：

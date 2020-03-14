@@ -3,7 +3,8 @@ package muser
 import (
 	"testing"
 
-	mock_mail "github.com/cao7113/hellogolang/mockup/mock"
+	mock_mail "github.com/cao7113/hellogolang/mockup/mail/mock"
+
 	"github.com/magiconair/properties/assert"
 
 	"github.com/golang/mock/gomock"
