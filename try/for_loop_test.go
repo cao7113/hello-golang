@@ -1,9 +1,10 @@
-package syntax
+package try
 
 import (
+	"testing"
+
 	"github.com/magiconair/properties/assert"
 	"github.com/sirupsen/logrus"
-	"testing"
 )
 
 func TestFor(t *testing.T) {
@@ -16,11 +17,11 @@ func TestFor(t *testing.T) {
 			break
 		}
 	}
-	assert.Equal(t, cnt + 1, i)
+	assert.Equal(t, cnt+1, i)
 }
 
 func TestForSlice(t *testing.T) {
-	m := []int{ 1, 2, 3}
+	m := []int{1, 2, 3}
 	// idx 0-based
 	for idx, e := range m {
 		logrus.Infoln(idx, e)
@@ -28,8 +29,8 @@ func TestForSlice(t *testing.T) {
 }
 
 func TestForRange(t *testing.T) {
-   m := map[string]string{
-   	"name": "cao",
+	m := map[string]string{
+		"name": "cao",
 	}
 
 	for k, v := range m {

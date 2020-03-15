@@ -103,7 +103,7 @@ tasks:
       - docker-compose up -d
   dk-build:
     cmds:
-      - docker build -t hello-golang-try
+      - docker build -t hello-golang-try .
   dk-run:
     deps:
       - dk-build

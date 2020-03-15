@@ -1,8 +1,6 @@
 package dingtalk
 
 import (
-	mock_dingtalk "github.com/cao7113/hellogolang/chatops/dingtalk/mock"
-	"github.com/golang/mock/gomock"
 	"testing"
 )
 
@@ -11,10 +9,10 @@ func TestSendText(t *testing.T) {
 	//ats := []string{}
 	//SendWithTitle("Up: 天天开心", "今天你🙂了吗？", ats)
 
-	ctl := gomock.NewController(t)
-	defer ctl.Finish()
-	mockSender := mock_dingtalk.NewMockSender(ctl)
-	mockSender.EXPECT().SendRequest("test").Return(nil)
+	//ctl := gomock.NewController(t)
+	//defer ctl.Finish()
+	//mockSender := mock_dingtalk.NewMockSender(ctl)
+	//mockSender.EXPECT().SendRequest("test").Return(nil)
 	//SendWithTitle()
 	// todo refactor sender OO design!!!
 }
