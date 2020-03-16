@@ -1,0 +1,1 @@
+https://yourbasic.org/golang/blueprint/

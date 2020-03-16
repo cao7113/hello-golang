@@ -1,11 +1,11 @@
-package goroutine
+package concurrency
 
 import (
 	"fmt"
 	"testing"
 )
 
-func TestChan(t *testing.T){
+func TestChan(t *testing.T) {
 	ch := make(chan int)
 	go func() {
 		ch <- 1

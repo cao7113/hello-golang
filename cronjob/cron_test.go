@@ -1,22 +1,23 @@
 package cronjob
 
 import (
+	"log"
+	"os"
 	"testing"
 
 	"github.com/robfig/cron/v3"
-	"github.com/sirupsen/logrus"
 )
 
 func TestCron(t *testing.T) {
 	i := 0
 	spec := "* * * * * *"
-	logrus.Infof("cron wit spec: %s", spec)
+	log.SetOutput(os.Stdout)
+	log.Printf("cron wit spec: %s", spec)
 
 	c := cron.New()
 	c.AddFunc(spec, func() {
 		i++
-		//log.Println("cron running:", i)
-		logrus.Infoln(i)
+		log.Println(i)
 	})
 	c.Start()
 	select {}

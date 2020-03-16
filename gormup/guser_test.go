@@ -3,7 +3,7 @@ package gormup
 import (
 	"testing"
 
-	"github.com/cao7113/hellogolang/tests/testhelper"
+	"github.com/cao7113/hellogolang/testhelper"
 
 	"github.com/cao7113/hellogolang/database"
 	"github.com/magiconair/properties/assert"

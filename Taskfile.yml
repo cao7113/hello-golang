@@ -92,9 +92,8 @@ tasks:
     cmds:
       - go run main.go
 
-  mod:
+  mod-up:
     cmds:
-      # - go mod init $GOMODNAME
       - go mod tidy -v
     
   ## docker

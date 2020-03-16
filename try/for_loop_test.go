@@ -11,7 +11,7 @@ func TestFor(t *testing.T) {
 	i := 0
 	cnt := 3
 	for {
-		i += 1
+		i++
 		logrus.Infof("i=%d", i)
 		if i > cnt {
 			break
