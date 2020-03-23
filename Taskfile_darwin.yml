@@ -23,7 +23,7 @@ tasks:
     desc: install migrations
     cmds:
       - which migrate || brew install hello-golang-migrate
-      - migrate --version
+      - migrate -version
 
   # gRPC
   install-bloomrpc:

@@ -78,7 +78,7 @@ tasks:
   #  $ go get -u github.com/golang/mock/gomock
   #  $ go install github.com/golang/mock/mockgen
   #  mockgen -source=./person/male.go -destination=./mock/male_mock.go -package=mock
-  mockgen:
+  gogen:
     desc: generate mock files by gomock
     cmds:
       - go generate ./...
@@ -154,7 +154,7 @@ tasks:
     cmds:
       - mysql -uroot {{.DB_NAME}} -e "show full tables"
   install-db-mig:
-    desc: install migrations by https://github.com/hello-golang-migrate/migrate/tree/master/cmd/migrate
+    desc: install migrations by https://github.com/golang-migrate/migrate/tree/master/cmd/migrate
     cmds:
       - echo should implement in Taskfile_{{GOOS}}.yml
 

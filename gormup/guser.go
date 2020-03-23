@@ -1,9 +1,10 @@
 package gormup
 
 import (
+	"time"
+
 	"github.com/cao7113/hellogolang/database"
 	"github.com/jinzhu/gorm"
-	"time"
 )
 
 type Guser struct {
@@ -26,8 +27,4 @@ func Migrate(db *gorm.DB) {
 // TableName tells the table name of withdrawal_logs
 func (Guser) TableName() string {
 	return "gusers"
-}
-
-func Try(){
-
 }

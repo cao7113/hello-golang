@@ -9,7 +9,7 @@ import (
 func main() {
 	i := 0
 	c := cron.New()
-	spec := "*/1 * * * * *"
+	spec := "* * * * *"
 	c.AddFunc(spec, func() {
 		i++
 		log.Println("start", i)

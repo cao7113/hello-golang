@@ -1,16 +1,6 @@
 # https://taskfile.dev
 version: '2'
 tasks:
-  # pb.user
-  cuser:
-    desc: compile user
-    cmds:
-      - protoc --go_out=plugins=grpc:. user/user.proto
-  tuser:
-    cmds:
-      #- go test
-
-  # ref google/protobuf
   caccount:
     desc: compile account
     cmds:

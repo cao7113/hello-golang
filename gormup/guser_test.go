@@ -7,13 +7,7 @@ import (
 
 	"github.com/cao7113/hellogolang/database"
 	"github.com/magiconair/properties/assert"
-	"github.com/sirupsen/logrus"
 )
-
-func TestTry(t *testing.T) {
-	Try()
-	logrus.Infof("test %s", "hi")
-}
 
 // http://gorm.io/zh_CN/docs/transactions.html
 func TestTrans(t *testing.T) {

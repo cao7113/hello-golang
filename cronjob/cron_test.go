@@ -10,7 +10,7 @@ import (
 
 func TestCron(t *testing.T) {
 	i := 0
-	spec := "* * * * * *"
+	spec := "* * * * *"
 	log.SetOutput(os.Stdout)
 	log.Printf("cron wit spec: %s", spec)
 
