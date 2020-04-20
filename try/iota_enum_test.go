@@ -19,6 +19,18 @@ const (
 	C3            // 3
 )
 
+const (
+	// bit operation
+	c1 = 1 << iota // 1
+	_              // 2
+	c3             // 4
+)
+
+func TestBitConst(t *testing.T) {
+	assert.Equal(t, c1, 1)
+	assert.Equal(t, c3, 4)
+}
+
 func TestIota(t *testing.T) {
 	assert.Equal(t, Male, 0)
 	assert.Equal(t, Female, 1)
