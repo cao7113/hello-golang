@@ -2,8 +2,9 @@ package q1
 
 import (
 	"fmt"
-	"github.com/sirupsen/logrus"
 	"testing"
+
+	"github.com/sirupsen/logrus"
 )
 
 func TestQ1s1(t *testing.T) {

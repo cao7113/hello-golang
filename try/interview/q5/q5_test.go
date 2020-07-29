@@ -1,10 +1,15 @@
 package q5
 
-import "testing"
+import (
+	"testing"
+
+	"github.com/sirupsen/logrus"
+)
 
 type student struct {
 	Name string
-	Age int }
+	Age  int
+}
 
 func TestA(t *testing.T) {
 	m := make(map[string]*student)
@@ -16,4 +21,6 @@ func TestA(t *testing.T) {
 	for _, stu := range stus {
 		m[stu.Name] = &stu
 	}
+
+	logrus.Infof("m=%+v", m)
 }

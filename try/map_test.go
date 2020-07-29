@@ -45,3 +45,14 @@ func TestMapKeysInOrder(t *testing.T) {
 		fmt.Println("Key:", k, "Value:", m[k])
 	}
 }
+
+func TestMapOfArray(t *testing.T) {
+	m := make(map[int][]int)
+	a := m[0]
+	a = append(a, 1)
+	a = append(a, 2)
+	m[0] = a
+	assert.Equal(t, 2, len(a))
+	assert.Equal(t, 2, a[1])
+	logrus.Infof("origin map %+v", m)
+}
