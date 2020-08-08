@@ -1,11 +1,10 @@
-package database
+package config
 
 import (
 	"time"
 
 	"github.com/sirupsen/logrus"
 
-	"github.com/cao7113/hellogolang/config"
 	"github.com/jinzhu/gorm"
 
 	// nolint
@@ -17,7 +16,7 @@ var Conn *gorm.DB
 
 // SetupMysql setup conn
 func init() {
-	dsn := config.Config.DbURL
+	dsn := Config.DbURL
 	var err error
 	Conn, err = gorm.Open("mysql", dsn)
 	if err != nil {

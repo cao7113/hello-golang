@@ -1,9 +1,9 @@
-package models
+package model
 
 import (
 	"time"
 
-	ds "github.com/cao7113/hellogolang/database"
+	"github.com/cao7113/hellogolang/config"
 
 	"github.com/jinzhu/gorm"
 )
@@ -19,11 +19,11 @@ type User struct {
 // UsersCount get users count
 func UsersCount() int {
 	var cnt int
-	ds.Conn.Model(&User{}).Count(&cnt)
+	config.Conn.Model(&User{}).Count(&cnt)
 	return cnt
 }
 
 // Create a user
 func (u *User) Create() {
-	ds.Conn.Create(u)
+	config.Conn.Create(u)
 }

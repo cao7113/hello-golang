@@ -3,7 +3,7 @@ package muser
 import (
 	"testing"
 
-	mock_mail "github.com/cao7113/hellogolang/mockup/mail/mock"
+	mock_mail "github.com/cao7113/hellogolang/testing/trymock/mail/mock"
 
 	"github.com/magiconair/properties/assert"
 

@@ -1,7 +1,7 @@
 package muser
 
 import (
-	"github.com/cao7113/hellogolang/mockup/mail"
+	"github.com/cao7113/hellogolang/testing/trymock/mail"
 	"github.com/sirupsen/logrus"
 )
 

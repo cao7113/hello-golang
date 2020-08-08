@@ -1,9 +1,10 @@
-package gormup
+package model
 
 import (
 	"time"
 
-	"github.com/cao7113/hellogolang/database"
+	"github.com/cao7113/hellogolang/config"
+
 	"github.com/jinzhu/gorm"
 )
 
@@ -15,7 +16,7 @@ type Guser struct {
 }
 
 func init() {
-	Migrate(database.Conn)
+	Migrate(config.Conn)
 }
 
 // Migrate create table and add indexes
