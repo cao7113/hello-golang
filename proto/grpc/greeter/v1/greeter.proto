@@ -1,0 +1,18 @@
+syntax = "proto3";
+package grpc.greeter.v1;
+option go_package = "github.com/cao7113/hellogolang/proto/gosdk/greeterv1";
+import "google/protobuf/empty.proto";
+//import "google/protobuf/timestamp.proto";
+
+service GreeterService {
+  rpc SayHello (google.protobuf.Empty) returns (HelloReply);
+  rpc SayHelloStream(HelloRequest) returns (stream HelloReply);
+}
+
+message HelloRequest {
+  string from = 1;
+}
+
+message HelloReply {
+  string message = 1;
+}

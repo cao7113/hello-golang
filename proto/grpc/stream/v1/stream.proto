@@ -1,0 +1,46 @@
+syntax = "proto3";
+package grpc.stream.v1;
+option go_package = "github.com/cao7113/hellogolang/proto/gosdk/streamv1";
+
+service StreamService {
+  // Hi is server stream
+  rpc Hi(HiRequest) returns (stream HiResponse);
+  rpc ClientStream(stream ClientStreamRequest) returns (ClientStreamResponse);
+  rpc BiStream(stream BiStreamRequest) returns (stream BiStreamResponse);
+}
+
+message HiRequest {
+  string from = 1;
+  // expect message count
+  int32 msg_count = 2;
+}
+
+message HiResponse {
+  string message = 1;
+  // message index
+  int32 index = 2;
+}
+
+message ClientStreamRequest{
+  string from = 1;
+  // message index
+  int32 index = 2;
+}
+
+message ClientStreamResponse {
+  string message = 1;
+  // actually got message count in service-side
+  int32 msg_count = 2;
+}
+
+message BiStreamRequest{
+  string from = 1;
+  // message index
+  int32 index = 2;
+}
+
+message BiStreamResponse{
+  string message = 1;
+  // message index
+  int32 index = 2;
+}

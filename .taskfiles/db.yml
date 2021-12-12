@@ -1,0 +1,8 @@
+version: '3'
+vars:
+  DB_NAME: golang_test
+tasks:
+  # todo move db tasks here
+  info:
+    cmds:
+      - echo "db name is {{.DB_NAME}}"

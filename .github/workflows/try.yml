@@ -1,0 +1,68 @@
+# https://help.github.com/en/github/automating-your-workflow-with-github-actions/workflow-syntax-for-github-actions
+name: Try Github Actions
+on:
+  push:
+    branches:
+    - actions
+jobs:
+  actions-env:
+    name: try github-actions env
+    runs-on: ubuntu-latest
+    steps:
+    - name: inspect env
+      run: printenv | sort
+    - name: Run multi-line script
+      run: |
+        echo Add other actions to build,
+        echo test, and deploy your project.
+
+  go-task:
+    name: try go-task
+    runs-on: ubuntu-latest
+    steps:
+      # https://github.com/arduino/setup-task
+      # https://github.com/marketplace/actions/arduino-setup-task
+      - name: Install Task
+        uses: arduino/setup-task@v1
+      - name: Show task version
+        run: |
+          which task
+          task --version
+          echo PATH=$PATH
+
+  mysql-service-by-docker:
+    name: try mysql 5.7 in docker
+    # same as unbuntu-20.04
+    runs-on: ubuntu-latest
+    services:
+      mysql:
+        image: mysql:5.7
+        env:
+          MYSQL_DATABASE: golang_test
+          MYSQL_USER: user
+          MYSQL_PASSWORD: password
+          MYSQL_ROOT_PASSWORD: rootpassword
+        ports:
+          - 3306
+        options: --health-cmd="mysqladmin ping" --health-interval=10s --health-timeout=5s --health-retries=3
+    steps:
+      - name: try mysql todo
+        run: echo todo test
+
+#  docker:
+#    name: Docker
+#    runs-on: ubuntu-20.04
+#    steps:
+#      - name: inspect docker env
+#        run: |
+#          docker version
+#          docker compose version
+#      - name: Check out code
+#        uses: actions/checkout@v1
+#        with:
+#          fetch-depth: 1
+#      - name: run datastore service
+#        run: |
+#          docker compose up -d
+#      - name: test docker service
+#        run: curl -Lv localhost:8080

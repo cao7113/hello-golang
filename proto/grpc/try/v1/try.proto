@@ -1,0 +1,75 @@
+syntax = "proto3";
+package grpc.try.v1;
+option go_package = "github.com/cao7113/hellogolang/proto/gosdk/tryv1";
+
+service TryService {
+  rpc Try (TryRequest) returns (TryResponse);
+  rpc Timeout(TimeoutRequest) returns (TimeoutResponse);
+  rpc Slow (SlowRequest) returns (SlowResponse);
+  rpc Fibonacci (FibonacciRequest) returns (FibonacciResponse);
+  rpc DetailError (DetailErrorRequest) returns (DetailErrorResponse);
+  rpc Fatal (FatalRequest) returns (FatalResponse);
+}
+
+message TryRequest {
+  string name = 1;
+  uint32 score = 2;
+  oneof gender {
+    bool male = 3;
+    bool female = 4;
+  }
+}
+
+message TryResponse {
+  string message = 1;
+}
+
+message FibonacciRequest {
+  uint64 n = 1;
+  string from = 2;
+}
+
+message FibonacciResponse {
+  uint64 result = 1;
+  int64 taken_ms = 2;
+}
+
+message TimeoutRequest {
+  uint32 timeout_in_ms = 1;
+}
+
+message TimeoutResponse {
+  string msg = 1;
+}
+
+message SlowRequest {
+  uint32 n_ms = 1;
+  string guid = 2;
+  string from = 3;
+}
+
+message SlowResponse {
+  string msg = 1;
+}
+
+message FatalRequest {
+  string from = 1;
+}
+
+message FatalResponse {
+  string msg = 1;
+}
+
+message Error {
+  uint64 code = 1;
+  string message = 2;
+}
+
+message DetailErrorRequest {
+  uint64 code = 1;
+  string from = 2;
+}
+
+message DetailErrorResponse {
+  string msg = 1;
+}

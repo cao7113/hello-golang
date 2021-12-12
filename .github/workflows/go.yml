@@ -1,0 +1,66 @@
+# https://help.github.com/en/github/automating-your-workflow-with-github-actions/workflow-syntax-for-github-actions
+name: Go Lint, Build and Test
+on:
+  push:
+    branches:
+    - master
+jobs:
+  lint:
+    name: Golang Lint
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+        with:
+          fetch-depth: 1
+      - name: Run golangci-lint
+        uses: golangci/golangci-lint-action@v2.5.2
+        with:
+          #version: latest
+          version: v1.43
+      #- name: Install golangci-lint
+      #  run: |
+      #    curl -sfL https://raw.githubusercontent.com/golangci/golangci-lint/master/install.sh | sh -s v1.43.0
+      #    sudo mv bin/golangci-lint /usr/local/bin
+      - name: Show golangci-lint version
+        run: golangci-lint --version
+
+  go:
+    name: Golang Build and Test
+    # Note: 18.04 has built mysql 5.7 installed
+    runs-on: ubuntu-18.04
+    steps:
+    # https://github.com/actions/virtual-environments/blob/ubuntu20/20211129.1/images/linux/Ubuntu1804-README.md#mysql
+    - name: Start MySQL5.7 Service
+      run: |
+        sudo systemctl start mysql.service
+        mysql -uroot -proot -e "select version()"
+
+    - uses: actions/checkout@v2
+      with:
+        fetch-depth: 1
+
+    - name: Set up Go
+      uses: actions/setup-go@v2
+      with:
+        go-version: 1.17
+
+    #- name: Build
+    #  run: go build -v ./...
+
+    - name: Install migrate tool as https://github.com/golang-migrate/migrate
+      run: curl -L https://github.com/golang-migrate/migrate/releases/download/v4.15.1/migrate.linux-amd64.tar.gz | tar xvz
+
+    - name: Check DB service and init database
+      run: |
+        mysql -uroot -proot -e "CREATE DATABASE IF NOT EXISTS golang_test DEFAULT CHARACTER SET utf8mb4;"
+        ./migrate -path "db/migrations" -database "mysql://root:root@tcp(127.0.0.1:3306)/golang_test?parseTime=true" up
+
+    - name: Test
+      #run: go test -v ./...
+      run: |
+        rm -f .env.test
+        go test $(go list ./... | grep -v -e /lab)
+      env:
+        APP_ENV: test
+        DATABASE_URL: "root:root@tcp(127.0.0.1:3306)/golang_test?parseTime=true&multiStatements=true"

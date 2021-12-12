@@ -1,0 +1,14 @@
+FROM golang:1.15-alpine3.12 AS builder
+RUN apk update && apk add --no-cache git
+
+WORKDIR /app
+COPY go.mod go.sum ./
+RUN GO111MODULE=on GOPROXY=https://goproxy.cn go mod download -x
+COPY . .
+
+#RUN find . -name fakedata.go
+# Mark the build as statically linked.
+RUN CGO_ENABLED=0 go build -v \
+    -installsuffix 'static' \
+    -o /app/bin/rpc \
+    rpc/cmd/main.go

@@ -1,0 +1,305 @@
+# https://taskfile.dev
+version: '3'
+includes:
+  os:
+    taskfile: .taskfiles/os-{{OS}}.yml
+    optional: true
+  db:
+    taskfile: .taskfiles/db.yml
+    optional: true
+
+vars:
+  DB_NAME: golang_test
+  DB_USER: root
+  DB_PASSWORD:
+  #DB_URL: mysql://{{.DB_USER}}:{{.DB_PASSWORD}}@tcp/{{.DB_NAME}}?parseTime=true
+  DB_URL: mysql://root:@tcp/golang_test?parseTime=true
+  MYSQL_CLI_OPTS: "-u{{.DB_USER}} "
+  MIG_PATH: db/migrations
+  GOMODNAME: "github.com/cao7113/grpc-golang"
+
+tasks:  ## golangci-lint
+  default:
+    deps: [ci]
+
+  ci:
+    deps: [lint, test]
+
+  lint:
+    desc: run golangci-lint
+    cmds:
+      - golangci-lint --version
+      - golangci-lint run -v ./...
+      # docker run --rm -v $(pwd):/app -w /app golangci/golangci-lint:v1.43.0 golangci-lint run -v
+  linter:
+    desc: list current golangci-lint linters
+    cmds:
+      # https://raw.githubusercontent.com/golangci/golangci-lint/v1.20.1/.golangci.example.yml
+      - golangci-lint linters -v
+
+  test:
+    desc: run go test
+    cmds:
+      - go test $(go list ./... | grep -v -e /lab)
+      #- go test -v ./...
+    env:
+      APP_ENV: test
+
+  test-env:
+    cmds:
+      - go test -v ./tests/env_test.go
+    env:
+      APP_ENV: test
+
+  rpc:
+    desc: start grpc server
+    cmds:
+      - go run -v rpc/main.go
+  dk-rpc:
+    desc: run docker rpc
+    cmds:
+      - docker run --rm -p50051:50051 hello-golang
+  rpc-list:
+    desc: list rpc service
+    cmds:
+      - grpcurl -plaintext localhost:50051 list
+      # - grpcurl -plaintext localhost:50051 describe grpc.hello.v1.HelloService
+  ping:
+    cmds:
+      - grpcurl -plaintext localhost:50051 grpc.ping.v1.PingService.Ping
+      # - grpcurl -plaintext -d '{"from": "cli-test"}' localhost:50051 grpc.ping.v1.PingService.Ping
+      - |
+        grpcurl -plaintext -d @ localhost:50051 proto.ping.v1.PingService.Ping <<-EOM | jq
+          {
+             "from": "console"
+          }
+        EOM
+
+  # pb-grpc
+  g:
+    cmds:
+      - |
+        protoc --go_out=. --go_opt=paths=source_relative \
+        --go-grpc_out=. --go-grpc_opt=paths=source_relative \
+        proto/grpc/hello/v1/hello.proto
+
+  install-pb-go-from-source:
+    cmds:
+      - |
+        go get google.golang.org/protobuf/cmd/protoc-gen-go \
+        google.golang.org/grpc/cmd/protoc-gen-go-grpc
+
+  install-prototool-docker:
+    desc: install uber prototool docker from https://github.com/uber/prototool
+    cmds:
+      - docker pull uber/prototool:{{.pt_version}}
+      - docker run --rm uber/prototool prototool version
+  install-buf-docker:
+    desc: install buf-build docker https://docs.buf.build/tour-10
+    cmds:
+      - docker pull bufbuild/buf:0.41.0
+
+  pt:
+    cmds:
+      - |
+        docker run --rm -v "$(pwd):/work" uber/prototool:1.10.0 \
+        prototool version
+
+  # buf.build
+  buf-init:
+    desc: init buf config
+    cmds:
+      - buf beta mod init
+      - cat buf.yaml
+  bufg:
+    cmds:
+      - buf lint
+      - buf generate
+
+  # buf commands
+  # - buf breaking --against '.git#branch=master'
+  # - buf breaking --against '.git#tag=v1.0.0'
+  # docker version, entrypoint: buf
+  # docker pull bufbuild/buf
+  # docker run --volume "$(pwd):/workspace" --workdir "/workspace" bufbuild/buf lint
+
+  ## Grpc service
+
+  hi:
+    desc: try it
+    cmds:
+      - |
+        grpcurl -plaintext -proto proto/hello/v1/hello.proto -d @ localhost:50051 proto.hello.v1.HelloService.Hello <<-EOM | jq
+          {
+             "name": "geek"
+          }
+        EOM
+  slow:
+    desc: try it
+    cmds:
+      - |
+        grpcurl -plaintext -proto proto/hello/v1/hello.proto -d @ localhost:50051 proto.hello.v1.HelloService.Slow <<-EOM | jq
+          {
+             "seconds": 10
+          }
+        EOM
+  error:
+    desc: try with error
+    cmds:
+      - |
+        grpcurl -plaintext -proto hellopb/hello.proto -d @ localhost:50051 hello.Greeter.SayHello <<-EOM | jq
+          {
+          "name": "geek",
+          "error": "error"
+          }
+        EOM
+
+  ## Datadog trace
+  dd:
+    desc: try request datadog
+    cmds:
+      - |
+        for i in {1..1000}; do echo $i; grpcurl -plaintext -proto hello/hello.proto -d @ localhost:50051 hello.Greeter.SayHello <<-EOM | jq
+          {
+          "name": "geek"
+          }
+        EOM
+        done
+
+  dde:
+    desc: try request datadog with error
+    cmds:
+      - |
+        for i in {1..50}; do echo $i; grpcurl -plaintext -proto hello/hello.proto -d @ localhost:50051 hello.Greeter.SayHello <<-EOM | jq
+        {
+          "name": "geek",
+          "error": "error"
+        }
+        EOM
+        sleep 0.5
+        done
+
+  ## Command cli cobra
+  cb-hi:
+    name: run cobra hello
+    cmds:
+      - go run cobra/hello/main.go -v
+  cb-try:
+    name: run cobra hello try
+    cmds:
+      - go run cobra/hello/main.go try
+
+  info:
+    cmds:
+    - |
+      echo DB_NAME={{.DB_NAME}}
+      echo DB_URL={{.DB_URL}}
+
+  test-dingtalk:
+    desc: test dingtalk message https://ding-doc.dingtalk.com/doc#/serverapi3/iydd5h
+    cmds:
+      # echo export Atoken=todo-set-your-token
+      - |
+        curl 'https://oapi.dingtalk.com/robot/send?access_token={{.Atoken}}' \
+        -H 'Content-Type: application/json' \
+        -d '{"msgtype": "text", 
+            "text": {
+                  "content": "Up我就是我, 是不一样的烟火"
+            }
+          }'
+
+  #  $ go get -u github.com/golang/mock/gomock
+  #  $ go install github.com/golang/mock/mockgen
+  #  mockgen -source=./person/male.go -destination=./mock/male_mock.go -package=mock
+  gogen:
+    desc: generate mock files by gomock
+    cmds:
+      - go generate ./...
+
+  install-mockgen:
+    desc: install mockgen
+    cmds:
+      - go install github.com/golang/mock/mockgen
+
+  mod-up:
+    cmds:
+      - go mod tidy -v
+
+  ## Docker
+  dkcom-up:
+    cmds:
+      - docker-compose up -d
+  dk-build:
+    cmds:
+      - docker build -t hello-golang .
+  dk-run:
+    deps:
+      - dk-build
+    cmds:
+      - docker run --rm hello-golang
+  dk-build-test:
+    cmds:
+      - docker build -t hello-golang:test -f Dockerfile.test .
+  dk-test:
+    cmds:
+      - docker-compose up -d db
+      - task: db-reset
+      - task: test
+    env:
+      APP_ENV: test
+
+  ## DB
+  db:
+    desc: enter db session
+    cmds:
+      - mysql -u{{.DB_USER}} {{.DB_NAME}}
+  db-create:
+    cmds:
+      - mysql -u{{.DB_USER}} -e "create database if not exists \`{{.DB_NAME}}\`;"
+  db-drop:
+    cmds:
+      - mysql -u{{.DB_USER}} -e "drop database if exists \`{{.DB_NAME}}\`;"
+  # migrate create -ext sql -dir {{.MIG_PATH}} create_users_table
+  db-up:
+    desc: migrate up
+    cmds:
+      #- migrate -database $DB_URL -path {{.MIG_PATH}} up
+      - migrate -database mysql://root:@tcp/golang_test?parseTime=true -path {{.MIG_PATH}} up
+  db-down:
+    desc: migrate down
+    cmds:
+      - migrate -database $DB_URL -path {{.MIG_PATH}} down
+  db-reup:
+    desc: re-setup db
+    cmds:
+      # call tasks serially other than concurrently
+      - task: db-drop
+      - task: db-create
+      - task: db-up
+  db-dbs:
+    desc: show databases
+    cmds:
+      - mysql -uroot -e "show databases"
+  db-tables:
+    desc: show tables
+    cmds:
+      - mysql -uroot {{.DB_NAME}} -e "show full tables"
+  install-db-mig:
+    desc: install migrations by https://github.com/golang-migrate/migrate/tree/master/cmd/migrate
+    cmds:
+      - echo should implement in Taskfile_{{GOOS}}.yml
+
+  ## gore CLI
+  gore-cli:
+    desc: Auto-importing (gore -autoimport), quit using Ctrl+D or :quit or :q
+    cmds:
+      - gore -autoimport
+  install-gore:
+    desc: install https://github.com/motemen/gore
+    cmds:
+      - |
+        # The gore command requires Go tool-chains on runtime, so standalone binary is not distributed.
+        GO111MODULE=off go get -u github.com/motemen/gore/cmd/gore
+        # Make sure $GOPATH/bin is in your $PATH.
+        GO111MODULE=off go get -u github.com/mdempsky/gocode   # for code completion
+        GO111MODULE=off go get -u github.com/k0kubun/pp        # or github.com/davecgh/go-spew/spew

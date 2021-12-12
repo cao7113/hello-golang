@@ -1,0 +1,81 @@
+version: '3'
+tasks:
+  setup:
+    desc: setup golang env
+    cmds:
+      - task: install-asdf-golang
+      - task: install-tools
+
+  install-asdf-golang:
+    desc: install golang by great ASDF
+    status:
+      - which go > /dev/null
+    cmds:
+      - asdf plugin add golang || true
+      - asdf install golang 1.17.5
+      - asdf global golang 1.17.5
+      - go version
+
+  install-tools:
+    desc: install daily tools
+    cmds:
+      - task: install-cilint
+      #- task: install-db-mig
+      #- task: install-pb-go-grpc
+
+  install-cilint:
+    desc: install cilint as https://github.com/golangci/golangci-lint#macos
+    status:
+      - which golangci-lint > /dev/null
+    cmds:
+      - brew install golangci-lint
+      - golangci-lint --version
+
+  # gRPC https://developers.google.com/protocol-buffers/docs/reference/go-generated
+  install-pb-go-grpc:
+    desc: install grpc tools
+    status:
+      - which protoc-gen-go > /dev/null
+    cmds:
+      # protoc, grpc compiler and plugins
+      - brew install protobuf
+      - brew install protoc-gen-go
+      - brew install protoc-gen-go-grpc
+  install-prototool:
+    desc: install uber prototool from https://github.com/uber/prototool
+    cmds:
+      - brew install prototool
+      # - prototool version
+
+  install-buf:
+    desc: install buf https://docs.buf.build/ instead prototool
+    cmds:
+      - brew tap bufbuild/buf
+      - brew install buf
+    # 注意： buf像prototool一样也不负责管理plugin，如protoc-gen-go，需按install-pb-go-grpc 安装
+
+  install-grpcurl:
+    desc: install grpcurl
+    status:
+      - which grpcurl > /dev/null
+    cmds:
+      - brew install grpcurl
+  install-bloomrpc:
+    desc: install GUI client for gRPC
+    cmds:
+      - brew install bloomrpc
+
+  # DB tools
+  install-db-mig:
+    desc: install migrations
+    status:
+      - which migrate > /dev/null
+    cmds:
+      - brew install golang-migrate
+      - migrate -version
+
+  ## Great tools
+  install-gomplate:
+    desc: install gomplate tool
+    cmds:
+      - brew install gomplate

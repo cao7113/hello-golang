@@ -1,0 +1,15 @@
+syntax = "proto3";
+package grpc.hello.v1;
+option go_package = "github.com/cao7113/hellogolang/proto/gosdk/hellov1";
+
+service HelloService {
+  rpc Hello (HelloRequest) returns (HelloResponse);
+}
+
+message HelloRequest {
+  string from = 1;
+}
+
+message HelloResponse {
+  string message = 1;
+}
