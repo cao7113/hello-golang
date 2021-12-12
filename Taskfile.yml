@@ -51,6 +51,8 @@ tasks:  ## golangci-lint
     env:
       APP_ENV: test
 
+  gin: go run api/gin/*.go
+
   rpc:
     desc: start grpc server
     cmds:
