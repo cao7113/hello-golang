@@ -11,59 +11,90 @@ jobs:
     steps:
     - name: inspect env
       run: printenv | sort
+    # env: https://docs.github.com/en/actions/learn-github-actions/environment-variables
+    - name: show actions specific env
+      run: |
+        echo "CI=$CI"
+        echo "GITHUB_WORKFLOW=$GITHUB_WORKFLOW"
+        echo "GITHUB_RUN_ID=$GITHUB_RUN_ID"
     - name: Run multi-line script
       run: |
         echo Add other actions to build,
         echo test, and deploy your project.
 
-  builtin-mysql-on-ubuntu-1804:
-    # Note: 18.04 has built-in mysql-5.7 service installed (not started)
-    # https://github.com/actions/virtual-environments/blob/ubuntu20/20211129.1/images/linux/Ubuntu1804-README.md#mysql
-    # command password setting https://stackoverflow.com/questions/20751352/suppress-warning-messages-using-mysql-from-within-terminal-but-password-written
-    name: check built-in mysql5.7 service on ubuntu-18.04
-    runs-on: ubuntu-18.04
-    steps:
-      - name: Start MySQL Service
-        run: |
-          sudo systemctl start mysql.service
-          #sudo cat /etc/mysql/debian.cnf
-          cat <<-CFG > /tmp/my.cnf
-          [client]
-          user = "root"
-          password = "root"
-          host = "localhost"
-          CFG
-          mysql --version
-          mysql --defaults-extra-file=/tmp/my.cnf -e "select version();"
-          mysql --defaults-extra-file=/tmp/my.cnf -e "show databases;"
-
-  mysql-container-service:
-    name: try mysql 5.7 in container
+  redis-service:
+    # https://docs.github.com/en/actions/using-containerized-services/creating-redis-service-containers
+    name: try redis service container
     runs-on: ubuntu-latest
     services:
-      mysql:
-        image: mysql:5.7
-        env:
-          MYSQL_DATABASE: try_it
-          MYSQL_ROOT_PASSWORD: root
+      redis:
+        image: redis
+        # Set health checks to wait until redis has started
+        options: >-
+          --health-cmd "redis-cli ping"
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
         ports:
-          - 3306
-        options: --health-cmd="mysqladmin ping" --health-interval=10s --health-timeout=5s --health-retries=3
+          - 6379
     steps:
-      - name: try to connect
-        run: |
-          echo mysql service running on port: ${{ job.services.mysql.ports['3306'] }}
-          cat <<-CFG > /tmp/my.cnf
-          [client]
-          user = "root"
-          password = "root"
-          host = "127.0.0.1"
-          port = "${{ job.services.mysql.ports['3306'] }}"
-          CFG
-          cat /tmp/my.cnf
-          mysql --version
-          mysql --defaults-extra-file=/tmp/my.cnf -e "select version();"
-          mysql --defaults-extra-file=/tmp/my.cnf -e "show databases;"
+    - name: try to connect redis
+      run: |
+        # sudo apt-get update
+        sudo apt-get install -y redis-tools
+        echo redis service on ${{ job.services.redis.ports[6379] }}
+        redis-cli --version
+        redis-cli -p ${{ job.services.redis.ports[6379] }} -h localhost set test hi-redis
+        redis-cli -p ${{ job.services.redis.ports[6379] }} -h localhost get test
+
+#  builtin-mysql-on-ubuntu-1804:
+#    # Note: 18.04 has built-in mysql-5.7 service installed (not started)
+#    # https://github.com/actions/virtual-environments/blob/ubuntu20/20211129.1/images/linux/Ubuntu1804-README.md#mysql
+#    # command password setting https://stackoverflow.com/questions/20751352/suppress-warning-messages-using-mysql-from-within-terminal-but-password-written
+#    name: try built-in mysql-5.7 service on ubuntu-18.04
+#    runs-on: ubuntu-18.04
+#    steps:
+#      - name: Start MySQL Service
+#        run: |
+#          sudo systemctl start mysql.service
+#          #sudo cat /etc/mysql/debian.cnf
+#          cat <<-CFG > /tmp/my.cnf
+#          [client]
+#          user = "root"
+#          password = "root"
+#          host = "localhost"
+#          CFG
+#          mysql --version
+#          mysql --defaults-extra-file=/tmp/my.cnf -e "select version();"
+#          mysql --defaults-extra-file=/tmp/my.cnf -e "show databases;"
+
+#  mysql-container-service:
+#    name: try conatinerized mysql-5.7 service
+#    runs-on: ubuntu-latest
+#    services:
+#      mysql:
+#        image: mysql:5.7
+#        env:
+#          MYSQL_DATABASE: try_it
+#          MYSQL_ROOT_PASSWORD: root
+#        ports:
+#          - 3306
+#        options: --health-cmd="mysqladmin ping" --health-interval=10s --health-timeout=5s --health-retries=3
+#    steps:
+#      - name: try to connect
+#        run: |
+#          echo mysql service running on port: ${{ job.services.mysql.ports['3306'] }}
+#          cat <<-CFG > /tmp/my.cnf
+#          [client]
+#          user = "root"
+#          password = "root"
+#          host = "127.0.0.1"
+#          port = "${{ job.services.mysql.ports['3306'] }}"
+#          CFG
+#          cat /tmp/my.cnf
+#          mysql --version
+#          mysql --defaults-extra-file=/tmp/my.cnf -e "select version();"
+#          mysql --defaults-extra-file=/tmp/my.cnf -e "show databases;"
 
 #  go-task:
 #    name: try go-task
@@ -87,8 +118,3 @@ jobs:
 #        run: |
 #          docker version
 #          docker compose version
-#      - name: run datastore service
-#        run: |
-#          docker compose up -d
-#      - name: test docker service
-#        run: curl -Lv localhost:8080
