@@ -5,7 +5,7 @@ on:
     branches:
     - actions
 jobs:
-  actions-env:
+  github-actions-env:
     name: try github-actions env
     runs-on: ubuntu-latest
     steps:
@@ -16,38 +16,68 @@ jobs:
         echo Add other actions to build,
         echo test, and deploy your project.
 
-  go-task:
-    name: try go-task
-    runs-on: ubuntu-latest
+  builtin-mysql-on-ubuntu-1804:
+    # Note: 18.04 has built-in mysql-5.7 service installed (not started)
+    # https://github.com/actions/virtual-environments/blob/ubuntu20/20211129.1/images/linux/Ubuntu1804-README.md#mysql
+    # command password setting https://stackoverflow.com/questions/20751352/suppress-warning-messages-using-mysql-from-within-terminal-but-password-written
+    name: check built-in mysql5.7 service on ubuntu-18.04
+    runs-on: ubuntu-18.04
     steps:
-      # https://github.com/arduino/setup-task
-      # https://github.com/marketplace/actions/arduino-setup-task
-      - name: Install Task
-        uses: arduino/setup-task@v1
-      - name: Show task version
+      - name: Start MySQL Service
         run: |
-          which task
-          task --version
-          echo PATH=$PATH
+          sudo systemctl start mysql.service
+          #sudo cat /etc/mysql/debian.cnf
+          cat <<-CFG > /tmp/my.cnf
+          [client]
+          user = "root"
+          password = "root"
+          host = "localhost"
+          CFG
+          mysql --version
+          mysql --defaults-extra-file=/tmp/my.cnf -e "select version();"
+          mysql --defaults-extra-file=/tmp/my.cnf -e "show databases;"
 
-  mysql-service-by-docker:
-    name: try mysql 5.7 in docker
-    # same as unbuntu-20.04
+  mysql-container-service:
+    name: try mysql 5.7 in container
     runs-on: ubuntu-latest
     services:
       mysql:
         image: mysql:5.7
         env:
-          MYSQL_DATABASE: golang_test
-          MYSQL_USER: user
-          MYSQL_PASSWORD: password
-          MYSQL_ROOT_PASSWORD: rootpassword
+          MYSQL_DATABASE: try_it
+          MYSQL_ROOT_PASSWORD: root
         ports:
           - 3306
         options: --health-cmd="mysqladmin ping" --health-interval=10s --health-timeout=5s --health-retries=3
     steps:
-      - name: try mysql todo
-        run: echo todo test
+      - name: try to connect
+        run: |
+          echo mysql service running on port: ${{ job.services.mysql.ports['3306'] }}
+          cat <<-CFG > /tmp/my.cnf
+          [client]
+          user = "root"
+          password = "root"
+          host = "127.0.0.1"
+          port = "${{ job.services.mysql.ports['3306'] }}"
+          CFG
+          cat /tmp/my.cnf
+          mysql --version
+          mysql --defaults-extra-file=/tmp/my.cnf -e "select version();"
+          mysql --defaults-extra-file=/tmp/my.cnf -e "show databases;"
+
+#  go-task:
+#    name: try go-task
+#    runs-on: ubuntu-latest
+#    steps:
+#      # https://github.com/arduino/setup-task
+#      # https://github.com/marketplace/actions/arduino-setup-task
+#      - name: Install Task
+#        uses: arduino/setup-task@v1
+#      - name: Show task version
+#        run: |
+#          which task
+#          task --version
+#          echo PATH=$PATH
 
 #  docker:
 #    name: Docker
@@ -57,10 +87,6 @@ jobs:
 #        run: |
 #          docker version
 #          docker compose version
-#      - name: Check out code
-#        uses: actions/checkout@v1
-#        with:
-#          fetch-depth: 1
 #      - name: run datastore service
 #        run: |
 #          docker compose up -d
