@@ -1,22 +1,24 @@
 package db
 
 import (
+	"fmt"
 	"github.com/go-redis/redis/v8"
 	"github.com/stretchr/testify/suite"
 	"testing"
 )
 
 func (s *RedisSuite) TestRedis() {
-	rdb := RedisConn
-
-	err := rdb.Set(rCtx, "test", "hi-redis", 0).Err()
+	k := "test"
+	v := "hi-redis"
+	err := RedisConn.Set(rCtx, k, v, 0).Err()
 	s.Nil(err)
 
-	val, err := rdb.Get(rCtx, "test").Result()
+	val, err := RedisConn.Get(rCtx, k).Result()
 	s.Nil(err)
-	s.Equal("hi-redis", val)
+	s.Equal(v, val)
+	fmt.Printf("%s redis value: %s\n", k, v)
 
-	_, err = rdb.Get(rCtx, "missing-key-123").Result()
+	_, err = RedisConn.Get(rCtx, k+"-missing-key-123").Result()
 	s.EqualValues(redis.Nil, err)
 }
 
