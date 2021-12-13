@@ -26,7 +26,9 @@ type EnvConfig struct {
 	ServiceName string `env:"SERVICE_NAME" envDefault:"hello-golang"`
 
 	// Settings
-	DbURL string `env:"DATABASE_URL,required"`
+	DbURL       string `env:"DATABASE_URL,required"`
+	RedisAddr   string `env:"REDIS_ADDR" envDefault:"localhost:6379"`
+	RedisPasswd string `env:"REDIS_PASSWORD"`
 
 	// DingTalk
 	DingdingURL   string `env:"DINGDING_URL" envDefault:"https://oapi.dingtalk.com/robot/send"`

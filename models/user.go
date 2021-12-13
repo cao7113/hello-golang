@@ -15,10 +15,10 @@ type User struct {
 
 func UsersCount() int64 {
 	var cnt int64
-	db.Conn.Model(User{}).Count(&cnt)
+	db.MyConn.Model(User{}).Count(&cnt)
 	return cnt
 }
 
 func (u *User) Create() *gorm.DB {
-	return db.Conn.Create(u)
+	return db.MyConn.Create(u)
 }

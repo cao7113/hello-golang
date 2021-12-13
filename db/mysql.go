@@ -8,7 +8,7 @@ import (
 	"time"
 )
 
-var Conn *gorm.DB
+var MyConn *gorm.DB
 
 func init() {
 	dsn := config.Config.DbURL
@@ -17,13 +17,13 @@ func init() {
 	}
 
 	var err error
-	Conn, err = gorm.Open(mysql.Open(dsn), &gorm.Config{})
+	MyConn, err = gorm.Open(mysql.Open(dsn), &gorm.Config{})
 	if err != nil {
 		panic("open mysql error")
 	}
 	// defer Conn.Close()
 
-	sqlDB, err := Conn.DB()
+	sqlDB, err := MyConn.DB()
 	if err != nil {
 		panic("get sqlDB error")
 	}

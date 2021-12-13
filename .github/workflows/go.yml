@@ -70,7 +70,9 @@ jobs:
       #run: go test -v ./...
       run: |
         rm -f .env.test
+        echo redis service port is ${{ job.services.redis.ports[6379] }}
         go test $(go list ./... | grep -v -e /lab)
       env:
         APP_ENV: test
         DATABASE_URL: "root:root@tcp(127.0.0.1:3306)/golang_test?parseTime=true&multiStatements=true"
+        REDIS_ADDR: "localhost:${{ job.services.redis.ports[6379] }}"

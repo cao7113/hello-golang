@@ -7,16 +7,16 @@ import (
 
 func TruncateTable(tableName string) {
 	sql := fmt.Sprintf("truncate table %s;", tableName)
-	db.Conn.Exec(sql)
+	db.MyConn.Exec(sql)
 }
 
 func InsertRecord(record interface{}) error {
-	err := db.Conn.Create(record).Error
+	err := db.MyConn.Create(record).Error
 	return err
 }
 
 func RecordCount(record interface{}) int64 {
 	var count int64
-	db.Conn.Model(record).Count(&count)
+	db.MyConn.Model(record).Count(&count)
 	return count
 }
