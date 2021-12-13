@@ -42,4 +42,4 @@ services:
 
   # test-app:
   #   build: .
-  #   Dockerfile: Docker.tests
+  #   Dockerfile: Docker.test
