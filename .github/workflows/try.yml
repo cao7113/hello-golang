@@ -22,45 +22,45 @@ jobs:
         echo Add other actions to build,
         echo test, and deploy your project.
 
-  es-container-lab:
-    # https://hub.docker.com/_/elasticsearch
-    # https://www.docker.elastic.co/r/elasticsearch
-    name: try es container service
-    runs-on: ubuntu-latest
-    services:
-      es:
-        image: docker.elastic.co/elasticsearch/elasticsearch:7.16.1
-        env:
-          discovery.type: single-node
-        options: >-
-          --health-cmd "curl http://localhost:9200/_cluster/health"
-          --health-interval 10s
-          --health-timeout 5s
-          --health-retries 10
-        ports:
-          - 9200:9200
-    steps:
-      - name: try to connect
-        run: curl http://localhost:9200
+#  es-container-lab:
+#    # https://hub.docker.com/_/elasticsearch
+#    # https://www.docker.elastic.co/r/elasticsearch
+#    name: try es container service
+#    runs-on: ubuntu-latest
+#    services:
+#      es:
+#        image: docker.elastic.co/elasticsearch/elasticsearch:7.16.1
+#        env:
+#          discovery.type: single-node
+#        options: >-
+#          --health-cmd "curl http://localhost:9200/_cluster/health"
+#          --health-interval 10s
+#          --health-timeout 5s
+#          --health-retries 10
+#        ports:
+#          - 9200:9200
+#    steps:
+#      - name: try to connect
+#        run: curl http://localhost:9200
 
-  es-actions:
-    # https://github.com/elastic/elastic-github-actions/tree/master/elasticsearch
-    name: try es in github-actions
-    runs-on: ubuntu-latest
-    steps:
-    - name: Configure sysctl limits
-      run: |
-        sudo swapoff -a
-        sudo sysctl -w vm.swappiness=1
-        sudo sysctl -w fs.file-max=262144
-        sudo sysctl -w vm.max_map_count=262144
-
-    - name: Runs Elasticsearch
-      uses: elastic/elastic-github-actions/elasticsearch@master
-      with:
-        stack-version: 7.6.0
-    - name: try to connect
-      run: curl http://localhost:9200
+#  es-actions:
+#    # https://github.com/elastic/elastic-github-actions/tree/master/elasticsearch
+#    name: try es in github-actions
+#    runs-on: ubuntu-latest
+#    steps:
+#    - name: Configure sysctl limits
+#      run: |
+#        sudo swapoff -a
+#        sudo sysctl -w vm.swappiness=1
+#        sudo sysctl -w fs.file-max=262144
+#        sudo sysctl -w vm.max_map_count=262144
+#
+#    - name: Runs Elasticsearch
+#      uses: elastic/elastic-github-actions/elasticsearch@master
+#      with:
+#        stack-version: 7.6.0
+#    - name: try to connect
+#      run: curl http://localhost:9200
 
 #  redis-service:
 #    # https://docs.github.com/en/actions/using-containerized-services/creating-redis-service-containers
