@@ -47,6 +47,35 @@ jobs:
         MATRIX_CONTEXT: ${{ toJSON(matrix) }}
       run: echo "$MATRIX_CONTEXT"
 
+  notify-people:
+    runs-on: ubuntu-latest
+    steps:
+      - name: hi
+        run: |
+          curl -X POST -H "Content-Type: application/json" -d '{
+            "msg_type": "post",
+            "content": {
+              "post": {
+                "zh_cn": {
+                  "title": "Try Github Actions",
+                  "content": [
+                    [
+                      {
+                        "tag": "text",
+                        "text": "测试消息: "
+                      },
+                      {
+                        "tag": "a",
+                        "text": "Repo",
+                        "href": "${{github.server_url}}/${{github.repository}}"
+                      }
+                    ]
+                  ]
+                }
+              }
+            }
+        }' https://open.larksuite.com/open-apis/bot/v2/hook/${{ secrets.LARK_WEBHOOK_SECRET }}
+
 #  es-container-lab:
 #    # https://hub.docker.com/_/elasticsearch
 #    # https://www.docker.elastic.co/r/elasticsearch
