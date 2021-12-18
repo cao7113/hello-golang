@@ -22,6 +22,8 @@ jobs:
         with:
           repository: cao7113/nil
           ref: alpha
+          token: ${{ secrets.GH_TESTING_PAT }}
+          #token: ${{ secrets.GITHUB_TOKEN }}
 
       # https://mikefarah.gitbook.io/yq/usage/github-action
       - name: Update image-tag in realm alpha.yaml file
