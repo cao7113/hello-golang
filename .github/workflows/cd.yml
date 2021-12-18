@@ -6,14 +6,14 @@ on:
       - main
 
 jobs:
-  ensure-ci-passed:
+  ensure-ci-pass:
     needs: cao7113/hello-golang/.github/workflows/ci.yml@main
 
   auto-deploy-alpha:
     name: auto deploy to alpha cluster
     runs-on: ubuntu-latest
     if: ${{ github.ref_name == 'alpha-bot' }}
-    needs: ensure-base-pass
+    needs: ensure-ci-pass
     steps:
       # https://github.com/actions/checkout#checkout-multiple-repos-private
       # https://github.com/peatio/realm-cia
