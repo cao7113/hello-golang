@@ -79,7 +79,7 @@ jobs:
       - name: Update image-tag in main file
         uses: mikefarah/yq@master
         with:
-          cmd: yq eval '.hi.image.tag = ${{steps.tag_version.outputs.new_tag}}' -i 'release-request/main.yml'
+          cmd: yq eval '.hi.image.tag = "${{steps.tag_version.outputs.new_tag}}"' -i 'release-request/main.yml'
 
       # https://github.com/marketplace/actions/create-pull-request
       # https://github.com/peter-evans/create-pull-request
