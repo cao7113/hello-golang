@@ -3,7 +3,9 @@ name: Try Github Actions
 on:
   push:
     branches:
-    - actions
+      - actions
+    tags:
+      - 'ci-*'
 jobs:
   github-actions-env:
     name: try github-actions env
