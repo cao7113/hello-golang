@@ -27,7 +27,7 @@ jobs:
       - name: Update image-tag in realm alpha.yaml file
         uses: mikefarah/yq@master
         with:
-          cmd: yq eval '.hi.image.tag = strenv(GITHUB_SHA)' -i 'alpha.yaml'
+          cmd: yq eval '.hi.image.tag = strenv(GITHUB_SHA)' -i 'alpha.yml'
 
       - name: Push to trigger deploy
         run: |
