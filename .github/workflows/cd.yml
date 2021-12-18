@@ -62,7 +62,7 @@ jobs:
       - name: Update image-tag in main file
         uses: mikefarah/yq@master
         with:
-          cmd: yq eval '.hi.image.tag = strenv(GITHUB_SHA)' -i 'main.yaml'
+          cmd: yq eval '.hi.image.tag = strenv(GITHUB_SHA)' -i 'main.yml'
 
       # https://github.com/marketplace/actions/create-pull-request
       # https://github.com/peter-evans/create-pull-request
