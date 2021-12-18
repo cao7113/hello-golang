@@ -1,4 +1,4 @@
-name: Caller
+name: CD
 on:
   push:
     branches:
@@ -7,7 +7,7 @@ on:
 
 jobs:
   ensure-ci-pass:
-    needs: cao7113/hello-golang/.github/workflows/ci.yml@main
+    uses: cao7113/hello-golang/.github/workflows/ci.yml@main
 
   auto-deploy-alpha:
     name: auto deploy to alpha cluster
