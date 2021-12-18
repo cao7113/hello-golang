@@ -70,11 +70,16 @@ jobs:
           ref: main
           path: release-request
 
+      - name: check dir
+        run: |
+          ls -l
+          ls release-request
+
       # https://mikefarah.gitbook.io/yq/usage/github-action
       - name: Update image-tag in main file
         uses: mikefarah/yq@master
         with:
-          cmd: cd release-request && yq eval '.hi.image.tag = ${{steps.tag_version.outputs.new_tag}}' -i 'main.yml'
+          cmd: yq eval '.hi.image.tag = ${{steps.tag_version.outputs.new_tag}}' -i 'release-request/main.yml'
 
       # https://github.com/marketplace/actions/create-pull-request
       # https://github.com/peter-evans/create-pull-request
