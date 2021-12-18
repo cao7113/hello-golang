@@ -70,7 +70,7 @@ jobs:
         id: cpr
         uses: peter-evans/create-pull-request@v3
         with:
-          #token: ${{ secrets.GH_TESTING_PAT }}
+          token: ${{ secrets.GH_TESTING_PAT }}
           title: request to update main
           body: Code change with ${{github.event.head_commit.message}} ${{github.event.compare}} by ${{github.actor}}
           commit-message: "[bot] github-actions pull-request on ${{ github.sha }}"
