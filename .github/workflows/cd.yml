@@ -38,13 +38,16 @@ jobs:
           echo "pushing hello-golang:$GITHUB_REF_NAME => $GITHUB_SHA to nil repo"
           git add .
           git commit -m "deploy to alpha cluster by bot on commit $GITHUB_SHA"
-          git push
+          git push   
+
+      - name: Set trigger shot sha
+        id: vars
+        run: echo "::set-output name=sha_short::$(git rev-parse --short ${{github.sha}})"
 
       - name: Notify people
         # https://docs.github.com/en/actions/learn-github-actions/contexts#github-context
         run: |
-          export SHORT_SHA=$(git rev-parse --short HEAD)
-          curl -X POST -H "Content-Type: application/json" -d '{"msg_type": "post", "content": {"post": {"zh_cn": {"title": "[CI/CD] HelloGolang Alpha Deployed🎉","content": [[{"tag":"text", "text": "${{github.actor}} commit: ${{github.event.head_commit.message}} at ${SHORT_SHA}!" },{ "tag": "a","text": "代码变更", "href": "${{github.event.compare}}"},{ "tag": "a","text": "Actions链接", "href": "${{github.server_url}}/${{github.repository}}/actions/runs/${{github.run_id}}"}]]}}}}' https://open.larksuite.com/open-apis/bot/v2/hook/${{secrets.LARK_WEBHOOK_SECRET}}
+          curl -X POST -H "Content-Type: application/json" -d '{"msg_type": "post", "content": {"post": {"zh_cn": {"title": "[CI/CD] Hello Alpha Deployed🎉","content": [[{"tag":"text", "text": "${{github.actor}} commit: ${{join(github.event.commits.*.message, ", ")}} at ${{steps.vars.outputs.sha_short}}!" },{ "tag": "a","text": "代码变更", "href": "${{github.event.compare}}"},{ "tag": "a","text": "Actions链接", "href": "${{github.server_url}}/${{github.repository}}/actions/runs/${{github.run_id}}"}]]}}}}' https://open.larksuite.com/open-apis/bot/v2/hook/${{secrets.LARK_WEBHOOK_SECRET}}
           echo "==sent alert message"
 
   tag-on-main-then-release-request:
