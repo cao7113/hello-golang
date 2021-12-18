@@ -7,7 +7,7 @@ on:
 
 jobs:
   ensure-ci-passed:
-    needs: cao7113/hello-golang/.github/workflows/base.yml@main
+    needs: cao7113/hello-golang/.github/workflows/ci.yml@main
 
   auto-deploy-alpha:
     name: auto deploy to alpha cluster
