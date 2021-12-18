@@ -40,7 +40,7 @@ jobs:
           git commit -m "deploy to alpha cluster by bot on commit $GITHUB_SHA"
           git push   
 
-      - name: Set trigger shot sha
+      - name: Set trigger short SHA
         id: vars
         run: echo "::set-output name=sha_short::$(git rev-parse --short ${{github.sha}})"
 
@@ -58,6 +58,10 @@ jobs:
     steps:
       - name: Checkout hello code
         uses: actions/checkout@v2
+
+      - name: Set trigger short SHA
+        id: vars
+        run: echo "::set-output name=sha_short::$(git rev-parse --short ${{github.sha}})"
 
       # https://github.com/marketplace/actions/github-tag
       - name: Bump version and push tag
@@ -104,4 +108,3 @@ jobs:
         run: |
           curl -X POST -H "Content-Type: application/json" -d '{"msg_type": "post", "content": {"post": {"zh_cn": {"title": "[CI/CD] Hello main Release PR#${{steps.cpr.outputs.pull-request-number}} with tag: ${{steps.tag_version.outputs.new_tag}}🚀, Please Review!","content": [[{ "tag": "a","text": "PR#${{steps.cpr.outputs.pull-request-number}}链接", "href": "${{steps.cpr.outputs.pull-request-url}}/files"},{"tag":"text", "text": "${{github.actor}} cimmit: ${{join(github.event.commits.*.message, ', ')}} at ${{steps.vars.outputs.sha_short}}!" },{ "tag": "a","text": "代码变更Diff", "href": "${{github.event.compare}}"}]]}}}}' https://open.larksuite.com/open-apis/bot/v2/hook/${{secrets.LARK_WEBHOOK_SECRET}}
           echo "\n==sent alert message!"
-          
