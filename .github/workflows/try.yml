@@ -11,16 +11,48 @@ jobs:
     steps:
     - name: inspect env
       run: printenv | sort
-    # env: https://docs.github.com/en/actions/learn-github-actions/environment-variables
+    # env-var: https://docs.github.com/en/actions/learn-github-actions/environment-variables
     - name: show actions specific env
       run: |
         echo "CI=$CI"
         echo "GITHUB_WORKFLOW=$GITHUB_WORKFLOW"
         echo "GITHUB_RUN_ID=$GITHUB_RUN_ID"
-    - name: Run multi-line script
-      run: |
-        echo Add other actions to build,
-        echo test, and deploy your project.
+        echo "GITHUB_REF_NAME=$GITHUB_REF_NAME"
+        
+        echo "context github.repository = ${{ github.repository }}"
+        echo "context github.ref_name = ${{ github.ref_name }}"
+    # context: https://docs.github.com/en/actions/learn-github-actions/contexts#github-context
+    - name: Dump GitHub context
+      env:
+        GITHUB_CONTEXT: ${{ toJSON(github) }}
+      run: echo "$GITHUB_CONTEXT"
+    - name: Dump job context
+      env:
+        JOB_CONTEXT: ${{ toJSON(job) }}
+      run: echo "$JOB_CONTEXT"
+    - name: Dump steps context
+      env:
+        STEPS_CONTEXT: ${{ toJSON(steps) }}
+      run: echo "$STEPS_CONTEXT"
+    - name: Dump runner context
+      env:
+        RUNNER_CONTEXT: ${{ toJSON(runner) }}
+      run: echo "$RUNNER_CONTEXT"
+    - name: Dump strategy context
+      env:
+        STRATEGY_CONTEXT: ${{ toJSON(strategy) }}
+      run: echo "$STRATEGY_CONTEXT"
+    - name: Dump matrix context
+      env:
+        MATRIX_CONTEXT: ${{ toJSON(matrix) }}
+      run: echo "$MATRIX_CONTEXT"
+
+  notify-people:
+    runs-on: ubuntu-latest
+    steps:
+      - name: hi
+        run: |
+          curl -X POST -H "Content-Type: application/json" -d '{"msg_type": "post", "content": {"post": {"zh_cn": {"title": "Try Github Actions","content": [[{"tag":"text", "text": "测试消息: " },{ "tag": "a","text": "Repo", "href": "${{github.server_url}}/${{github.repository}}"}]]}}}}' https://open.larksuite.com/open-apis/bot/v2/hook/${{ secrets.LARK_WEBHOOK_SECRET }}
 
 #  es-container-lab:
 #    # https://hub.docker.com/_/elasticsearch
