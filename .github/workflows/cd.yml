@@ -44,7 +44,7 @@ jobs:
           curl -X POST -H "Content-Type: application/json" -d '{"msg_type": "post", "content": {"post": {"zh_cn": {"title": "[CI/CD] Hello Alpha Deployed🎉","content": [[{"tag":"text", "text": "${{github.actor}} released: ${{github.event.head_commit.message}}!" },{ "tag": "a","text": "Actions链接", "href": "${{github.server_url}}/${{github.repository}}/actions/runs/${{github.run_id}}"},{ "tag": "a","text": "代码变更", "href": "${{github.event.compare}}"}]]}}}}' https://open.larksuite.com/open-apis/bot/v2/hook/${{secrets.LARK_WEBHOOK_SECRET}}
           echo "==sent alert message"
 
-  make-main-tag:
+  tag-on-main-then-release-request:
     name: request to update main cluster
     runs-on: ubuntu-latest
     if: ${{ github.ref_name == 'main' }}
@@ -58,45 +58,41 @@ jobs:
           default_bump: patch
           github_token: ${{ secrets.GITHUB_TOKEN }}
 
-          #  request-deploy-main-after-tag:
-#    name: request to update main cluster
-#    runs-on: ubuntu-latest
-#    if: ${{ github.ref_name == 'main' }}
-#    # todo do only on tag
-#    steps:
-#      # https://github.com/actions/checkout#checkout-multiple-repos-private
-#      # https://github.com/peatio/edo
-#      - name: Checkout edo code
-#        uses: actions/checkout@v2
-#        with:
-#          repository: cao7113/nil
-#          ref: main
-#
-#      # https://mikefarah.gitbook.io/yq/usage/github-action
-#      - name: Update image-tag in main file
-#        uses: mikefarah/yq@master
-#        with:
-#          cmd: yq eval '.hi.image.tag = strenv(GITHUB_SHA)' -i 'main.yml'
-#
-#      # https://github.com/marketplace/actions/create-pull-request
-#      # https://github.com/peter-evans/create-pull-request
-#      - name: Create Pull Request
-#        id: cpr
-#        uses: peter-evans/create-pull-request@v3
-#        with:
-#          token: ${{ secrets.GH_TESTING_PAT }}
-#          title: request to update main
-#          body: Code change with ${{github.event.head_commit.message}} ${{github.event.compare}} by ${{github.actor}}
-#          commit-message: "[bot] github-actions pull-request on ${{ github.sha }}"
-#          branch: bot-up
-#          branch-suffix: timestamp
-#          delete-branch: true
-#          assignees: cao7113
-#          committer: GitHubBot <noreply@github.com>
-#
-#      - name: Notify people
-#        # https://docs.github.com/en/actions/learn-github-actions/contexts#github-context
-#        run: |
-#          curl -X POST -H "Content-Type: application/json" -d '{"msg_type": "post", "content": {"post": {"zh_cn": {"title": "[CI/CD] PR#${{steps.cpr.outputs.pull-request-number}} Requesting🚀, Please Approve","content": [[{ "tag": "a","text": "PR#${{steps.cpr.outputs.pull-request-number}}链接", "href": "${{steps.cpr.outputs.pull-request-url}}/files"},{"tag":"text", "text": "${{github.actor}} deploy released: ${{github.event.head_commit.message}}" },{ "tag": "a","text": "代码变更Diff", "href": "${{github.event.compare}}"}]]}}}}' https://open.larksuite.com/open-apis/bot/v2/hook/${{secrets.LARK_WEBHOOK_SECRET}}
-#          echo "\n==sent alert message!"
+      # https://github.com/actions/checkout#checkout-multiple-repos-private
+      # https://github.com/cao7113/nil
+      - name: Checkout nil code
+        uses: actions/checkout@v2
+        with:
+          repository: cao7113/nil
+          ref: main
+          path: release-request
+
+      # https://mikefarah.gitbook.io/yq/usage/github-action
+      - name: Update image-tag in main file
+        uses: mikefarah/yq@master
+        with:
+          cmd: cd release-request && yq eval '.hi.image.tag = ${{steps.tag_version.outputs.new_tag}}' -i 'main.yml'
+
+      # https://github.com/marketplace/actions/create-pull-request
+      # https://github.com/peter-evans/create-pull-request
+      - name: Create Pull Request
+        id: cpr
+        uses: peter-evans/create-pull-request@v3
+        with:
+          path: ${{github.workspace}}/release-request
+          token: ${{ secrets.GH_TESTING_PAT }}
+          title: request to update main
+          body: Code change with ${{github.event.head_commit.message}} ${{github.event.compare}} by ${{github.actor}}
+          commit-message: "[bot] github-actions pull-request on ${{ github.sha }}"
+          branch: bot-up
+          branch-suffix: timestamp
+          delete-branch: true
+          assignees: cao7113
+          committer: GitHubBot <noreply@github.com>
+
+      - name: Notify people
+        # https://docs.github.com/en/actions/learn-github-actions/contexts#github-context
+        run: |
+          curl -X POST -H "Content-Type: application/json" -d '{"msg_type": "post", "content": {"post": {"zh_cn": {"title": "[CI/CD] PR#${{steps.cpr.outputs.pull-request-number}} Releasing ${{steps.tag_version.outputs.new_tag}}🚀, Please Approve","content": [[{ "tag": "a","text": "PR#${{steps.cpr.outputs.pull-request-number}}链接", "href": "${{steps.cpr.outputs.pull-request-url}}/files"},{"tag":"text", "text": "${{github.actor}} deploy released: ${{github.event.head_commit.message}}" },{ "tag": "a","text": "代码变更Diff", "href": "${{github.event.compare}}"}]]}}}}' https://open.larksuite.com/open-apis/bot/v2/hook/${{secrets.LARK_WEBHOOK_SECRET}}
+          echo "\n==sent alert message!"
           
