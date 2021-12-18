@@ -78,6 +78,7 @@ jobs:
           branch-suffix: timestamp
           delete-branch: true
           assignees: cao7113
+          committer: cao7113
 
       - name: Notify people
         # https://docs.github.com/en/actions/learn-github-actions/contexts#github-context
