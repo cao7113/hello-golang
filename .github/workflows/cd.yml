@@ -76,8 +76,9 @@ jobs:
   release-main:
     name: release main after tag
     runs-on: ubuntu-latest
-    needs: ensure-ci-pass
-    if: ${{ github.ref_type == 'tag' && startsWith(github.ref_name, 'v') && github.event.base_ref == 'refs/heads/main' }}
+    #needs: ensure-ci-pass
+    #  && startsWith(github.ref_name, 'v') && github.event.base_ref == 'refs/heads/main'
+    if: ${{ github.ref_type == 'tag' }}
     steps:
       - run: echo current tag-name  ${{github.ref_type}}:${{github.ref_name}}
 
