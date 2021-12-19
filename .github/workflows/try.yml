@@ -61,7 +61,7 @@ jobs:
     steps:
       - name: hi
         run: |
-          curl -X POST -H "Content-Type: application/json" -d '{"msg_type": "post", "content": {"post": {"zh_cn": {"title": "Try Github Actions","content": [[{"tag":"text", "text": "测试消息: " },{ "tag": "a","text": "Repo", "href": "${{github.server_url}}/${{github.repository}}"}]]}}}}' https://open.larksuite.com/open-apis/bot/v2/hook/${{ secrets.LARK_WEBHOOK_SECRET }}
+          curl -X POST -H "Content-Type: application/json" -d '{"msg_type": "post", "content": {"post": {"zh_cn": {"title": "Try Github Actions","content": [[{"tag":"text", "text": "测试消息: ${{toJSON(github)}} " },{ "tag": "a","text": "Repo", "href": "${{github.server_url}}/${{github.repository}}"}]]}}}}' https://open.larksuite.com/open-apis/bot/v2/hook/${{ secrets.LARK_WEBHOOK_SECRET }}
 
 #  es-container-lab:
 #    # https://hub.docker.com/_/elasticsearch
