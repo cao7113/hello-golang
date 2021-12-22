@@ -53,8 +53,7 @@ tasks:  ## golangci-lint
 
   gin: go run api/gin/*.go
 
-  ## test tag
-  try-tag:
+  tag-pr:
     desc: tag and make release pr
     cmds:
       - |
