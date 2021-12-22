@@ -53,6 +53,33 @@ tasks:  ## golangci-lint
 
   gin: go run api/gin/*.go
 
+  ## test tag
+  try-tag:
+    cmds: |
+      # install bump by https://github.com/mroth/bump
+      # require gh cli
+      releaseRepo=cao7113/nil
+      if bump; then
+        git fetch --tags
+        lversion=$(git tag --list --sort=-v:refname | head -1)
+        # todo blank check
+        tmpReleaseRepo=local-nil-repo-$lversion
+        newBranch=bot-up-$lversion
+        rm -r $tmpReleaseRepo || true # if exist
+    
+        gh clone $releaseRepo $tmpReleaseRepo
+        cd $tmpReleaseRepo
+        git checkout -b $newBranch
+        yq eval ".hi.image.tag = ${lversion}" -i 'main.yaml'
+        git commit -a -m "bot up to version $lversion"
+        git push origin $newBranch
+        gh pr --fill
+        echo lark message todo
+        echo "bot up to version $lversion at PR $(gh pr view $newBranch --json 'url' -q '.url')"
+        cd ..
+        rm -r $tmpReleaseRepo
+      fi
+
   rpc:
     desc: start grpc server
     cmds:
