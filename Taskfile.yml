@@ -55,30 +55,40 @@ tasks:  ## golangci-lint
 
   ## test tag
   try-tag:
-    cmds: |
-      # install bump by https://github.com/mroth/bump
-      # require gh cli
-      releaseRepo=cao7113/nil
-      if bump; then
-        git fetch --tags
-        lversion=$(git tag --list --sort=-v:refname | head -1)
-        # todo blank check
-        tmpReleaseRepo=local-nil-repo-$lversion
-        newBranch=bot-up-$lversion
-        rm -r $tmpReleaseRepo || true # if exist
-    
-        gh clone $releaseRepo $tmpReleaseRepo
+    desc: tag and make release pr
+    cmds:
+      - |
+        # require gh-cli and https://tz.liuqiufeng.com/fsaintjacques/semver-tool
+        releaseRepo=cao7113/nil
+        branchPrefix=bot-up
+        git fetch --tags origin
+        lVersion=$(git tag --list --sort=-v:refname | head -1)
+        newVersion=v$(semver bump patch $lVersion)
+        git tag $newVersion
+        git push origin $newVersion
+        echo "==upgrade version from $lVersion to $newVersion"
+        
+        newBranch=$branchPrefix-$newVersion
+        tmpReleaseRepo=local-tmp-nil-repo-$newVersion
+        #rm -r $tmpReleaseRepo > /dev/null || true # if exist
+        echo "==local tmp release-repo is $tmpReleaseRepo branch: $newBranch"
+        gh clone $releaseRepo $tmpReleaseRepo -- --depth 1
         cd $tmpReleaseRepo
         git checkout -b $newBranch
-        yq eval ".hi.image.tag = ${lversion}" -i 'main.yaml'
-        git commit -a -m "bot up to version $lversion"
-        git push origin $newBranch
-        gh pr --fill
-        echo lark message todo
-        echo "bot up to version $lversion at PR $(gh pr view $newBranch --json 'url' -q '.url')"
+        newVersion=$newVersion yq eval ".hi.image.tag = env(newVersion)" -i 'main.yml'
+        git add .
+        git commit -a -m "bot up to version $newVersion"
+        git push -u origin $newBranch
+        gh pr create --fill --repo $releaseRepo
+        prURL=$(gh pr view $newBranch --json 'url' -q '.url')
+        echo "==bot up to version $newVersion at PR $prURL"
         cd ..
-        rm -r $tmpReleaseRepo
-      fi
+        rm -fr $tmpReleaseRepo
+        
+        lSecret=$(cat .env.lark.local)
+        curl -X POST -H "Content-Type: application/json" https://open.larksuite.com/open-apis/bot/v2/hook/${lSecret} -d @- <<-JN 
+          {"msg_type": "post", "content": {"post": {"zh_cn": {"title": "Try Release PR ${newVersion}🚀","content": [[{"tag":"text", "text": "发布新版本:${newVersion}"},{ "tag": "a","text": "PR", "href": "${prURL}"}]]}}}}
+        JN
 
   rpc:
     desc: start grpc server
