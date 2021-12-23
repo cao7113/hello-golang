@@ -60,8 +60,14 @@ tasks:  ## golangci-lint
         # require gh-cli and https://tz.liuqiufeng.com/fsaintjacques/semver-tool
         releaseRepo=cao7113/nil
         branchPrefix=bot-up
+        mainBranch=main # use origin main?
+        git checkout headBranch
         git fetch --tags origin
         lVersion=$(git tag --list --sort=-v:refname | head -1)
+        if git diff $mainBranch &lVersion; then # 0 means no diff
+          echo has no diff changed between $lVersion and $mainBranch
+          exit 1
+        fi
         newVersion=v$(semver bump patch $lVersion)
         git tag $newVersion
         git push origin $newVersion
