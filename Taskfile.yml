@@ -61,7 +61,7 @@ tasks:  ## golangci-lint
         releaseRepo=cao7113/nil
         branchPrefix=bot-up
         mainBranch=main # use origin main?
-        git checkout headBranch
+        git checkout $mainBranch
         git fetch --tags origin
         lVersion=$(git tag --list --sort=-v:refname | head -1)
         if git diff $mainBranch &lVersion; then # 0 means no diff
