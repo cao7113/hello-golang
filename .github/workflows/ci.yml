@@ -115,4 +115,4 @@ jobs:
     steps:
       - name: notify
         run: |
-          curl -X POST -H "Content-Type: application/json" -d '{"msg_type": "post", "content": {"post": {"zh_cn": {"title": "Try Github Actions","content": [[{"tag":"text", "text": "PR#${{github.event.number}} ${{github.event.action}}" },{ "tag": "a","text": "Repo", "href": "${{github.event.pull_request.html_url}}"}]]}}}}' https://open.larksuite.com/open-apis/bot/v2/hook/${{ secrets.LARK_WEBHOOK_SECRET }}
+          curl -X POST -H "Content-Type: application/json" -d '{"msg_type": "post", "content": {"post": {"zh_cn": {"title": "Try PR Notify","content": [[{"tag":"text", "text": "${{github.actor}} make PR#${{github.event.number}} ${{github.event.action}} on branch: ${{github.base_ref}} from ${{github.head_ref}} with msg: ${{github.event.pull_request.title}}" },{ "tag": "a","text": "Repo", "href": "${{github.event.pull_request.html_url}}"}]]}}}}' https://open.larksuite.com/open-apis/bot/v2/hook/${{ secrets.LARK_WEBHOOK_SECRET }}
