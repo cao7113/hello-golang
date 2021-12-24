@@ -63,6 +63,14 @@ jobs:
         run: |
           curl -X POST -H "Content-Type: application/json" -d '{"msg_type": "post", "content": {"post": {"zh_cn": {"title": "Try Github Actions","content": [[{"tag":"text", "text": "测试消息:" },{ "tag": "a","text": "Repo", "href": "${{github.server_url}}/${{github.repository}}"}]]}}}}' https://open.larksuite.com/open-apis/bot/v2/hook/${{ secrets.LARK_WEBHOOK_SECRET }}
 
+  pr-notify:
+    runs-on: ubuntu-latest
+    if: ${{ github.event_name == "pull_request" && github.ref_name == 'actions'}}
+    steps:
+      - name: notify
+        run: |
+          curl -X POST -H "Content-Type: application/json" -d '{"msg_type": "post", "content": {"post": {"zh_cn": {"title": "Try Github Actions","content": [[{"tag":"text", "text": "PR#${{github.event.number}} ${{github.event.action}}" },{ "tag": "a","text": "Repo", "href": "${{github.event.pull_request.html_url}}"}]]}}}}' https://open.larksuite.com/open-apis/bot/v2/hook/${{ secrets.LARK_WEBHOOK_SECRET }}
+
 #  node-docker:
 #    runs-on: ubuntu-latest
 #    container:
