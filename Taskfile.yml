@@ -53,6 +53,37 @@ tasks:  ## golangci-lint
 
   gin: go run api/gin/*.go
 
+  test-lark:
+    cmds:
+      - | 
+        curl -X POST -H "Content-Type: application/json" -d '{
+          "msg_type": "post",
+          "content": {
+            "post": {
+              "zh_cn": {
+                "title": "Lark测试",
+                "content": [
+                  [
+                    {
+                      "tag": "text",
+                      "text": "测试文字: "
+                    },
+                    {
+                      "tag": "a",
+                      "text": "请查看",
+                      "href": "https://www.shareup.me/"
+                    },
+                    {
+                        "tag": "at",
+                        "user_id": "ou_xxx"
+                    }
+                  ]
+                ]
+              }
+            }
+          }
+        }' https://open.larksuite.com/open-apis/bot/v2/hook/xxx
+
   tag-pr:
     desc: tag and make release pr
     cmds:
