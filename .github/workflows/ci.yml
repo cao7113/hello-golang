@@ -108,3 +108,11 @@ jobs:
         APP_ENV: "test"
         DATABASE_URL: "root:root@tcp(127.0.0.1:3306)/golang_test?parseTime=true&multiStatements=true"
         REDIS_ADDR: "localhost:${{ job.services.redis.ports[6379] }}"
+
+  pr-notify:
+    runs-on: ubuntu-latest
+    if: ${{ github.event_name == 'pull_request'}}
+    steps:
+      - name: notify
+        run: |
+          curl -X POST -H "Content-Type: application/json" -d '{"msg_type": "post", "content": {"post": {"zh_cn": {"title": "Try Github Actions","content": [[{"tag":"text", "text": "PR#${{github.event.number}} ${{github.event.action}}" },{ "tag": "a","text": "Repo", "href": "${{github.event.pull_request.html_url}}"}]]}}}}' https://open.larksuite.com/open-apis/bot/v2/hook/${{ secrets.LARK_WEBHOOK_SECRET }}
