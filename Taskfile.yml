@@ -53,6 +53,80 @@ tasks:  ## golangci-lint
 
   gin: go run api/gin/*.go
 
+  test-lark:
+    cmds:
+      - | 
+        curl -X POST -H "Content-Type: application/json" -d '{
+          "msg_type": "post",
+          "content": {
+            "post": {
+              "zh_cn": {
+                "title": "Lark测试",
+                "content": [
+                  [
+                    {
+                      "tag": "text",
+                      "text": "测试文字: "
+                    },
+                    {
+                      "tag": "a",
+                      "text": "请查看",
+                      "href": "https://www.shareup.me/"
+                    },
+                    {
+                        "tag": "at",
+                        "user_id": "ou_xxx"
+                    }
+                  ]
+                ]
+              }
+            }
+          }
+        }' https://open.larksuite.com/open-apis/bot/v2/hook/xxx
+
+  tag-pr:
+    desc: tag and make release pr
+    cmds:
+      - |
+        # require gh-cli and https://tz.liuqiufeng.com/fsaintjacques/semver-tool
+        releaseRepo=cao7113/nil
+        branchPrefix=bot-up
+        mainBranch=main # use origin main?
+        git checkout $mainBranch
+        git pull origin
+        git fetch --tags origin
+        lVersion=$(git tag --list --sort=-v:refname | head -1)
+        if git diff $mainBranch &lVersion; then # 0 means no diff
+          echo has no diff changed between $lVersion and $mainBranch
+          exit 1
+        fi
+        newVersion=v$(semver bump patch $lVersion)
+        git tag $newVersion
+        git push origin $newVersion
+        echo "==upgrade version from $lVersion to $newVersion"
+        
+        newBranch=$branchPrefix-$newVersion
+        tmpReleaseRepo=local-tmp-nil-repo-$newVersion
+        #rm -r $tmpReleaseRepo > /dev/null || true # if exist
+        echo "==local tmp release-repo is $tmpReleaseRepo branch: $newBranch"
+        gh clone $releaseRepo $tmpReleaseRepo -- --depth 1
+        cd $tmpReleaseRepo
+        git checkout -b $newBranch
+        newVersion=$newVersion yq eval ".hi.image.tag = env(newVersion)" -i 'main.yml'
+        git add .
+        git commit -a -m "bot up to version $newVersion"
+        git push -u origin $newBranch
+        gh pr create --fill --repo $releaseRepo
+        prURL=$(gh pr view $newBranch --json 'url' -q '.url')
+        echo "==bot up to version $newVersion at PR $prURL"
+        cd ..
+        rm -fr $tmpReleaseRepo
+        
+        lSecret=$(cat .env.lark.local)
+        curl -X POST -H "Content-Type: application/json" https://open.larksuite.com/open-apis/bot/v2/hook/${lSecret} -d @- <<-JN 
+          {"msg_type": "post", "content": {"post": {"zh_cn": {"title": "Try Release PR ${newVersion}🚀","content": [[{"tag":"text", "text": "发布新版本:${newVersion}"},{ "tag": "a","text": "PR", "href": "${prURL}"}]]}}}}
+        JN
+
   rpc:
     desc: start grpc server
     cmds:
