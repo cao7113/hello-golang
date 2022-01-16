@@ -1,4 +1,4 @@
-package channel
+package lab
 
 import (
 	"fmt"
@@ -10,28 +10,62 @@ import (
 	"time"
 )
 
-/*
-* 向一个nil channel发送消息，会一直阻塞
-* 向一个已经关闭的channel发送消息，会引发运行时恐慌（panic）
-* channel关闭后不可以继续向channel发送消息，但可以继续从channel接收消息
-* 当channel关闭并且缓冲区为空时，继续从从channel接收消息会得到一个对应类型的零值
- */
+func (s *ChannelSuite) TestChBase() {
+	s.Run("从nil channel读写，会阻塞", func() {
+		var ch chan int
+		s.Nil(ch) // (chan int)(nil)
+		ch = nil
 
-func (s *ChannelSuite) TestClose() {
-	c := make(chan int)
-	close(c)
-	for i := range c {
-		println(i)
-	}
-	j := <-c
-	s.Equal(0, j)
+		//i := <-ch // blocking if read
+		//s.Equal(0, i)
 
-	s.Panics(func() {
-		c <- 3 // has closed
+		//ch <- 1       // blocking if send
+		//s.False(true) // never here
 	})
 
-	//cr := make(<-chan int)
-	//close(cr)
+	s.Run("panic if send to closed channel", func() {
+		ch := make(chan int, 0)
+		close(ch)
+		s.PanicsWithError("send on closed channel", func() {
+			ch <- 2
+		})
+
+		_, ok := <-ch
+		s.False(ok) // false after closed
+	})
+
+	s.Run("可以从关闭的channel继续读取消息", func() {
+		ch := make(chan int, 3)
+		ch <- 1
+		ch <- 2
+		close(ch)
+		i := <-ch
+		s.Equal(1, i)
+		i = <-ch
+		s.Equal(2, i)
+		i = <-ch
+		s.Equal(0, i) // 类型零值
+		i = <-ch
+		s.Equal(0, i)
+	})
+
+	s.Run("close case", func() {
+		c := make(chan int)
+		close(c)
+		for i := range c {
+			s.EqualValues(1, i) // never hit here
+		}
+		j := <-c
+		s.Equal(0, j) // zero value
+
+		s.Panics(func() {
+			c <- 3 // closed
+		})
+
+		//bidirectional or send-only
+		cr := make(chan<- int)
+		close(cr)
+	})
 }
 
 func (s *ChannelSuite) TestChan() {

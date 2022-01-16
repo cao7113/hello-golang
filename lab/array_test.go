@@ -1,9 +1,17 @@
 package lab
 
-import "fmt"
+import (
+	"encoding/binary"
+	"fmt"
+)
 
 //https://go.dev/blog/slices-intro // 讲解非常深入
 // Array is value, slice is reference
+
+func (s *TrySuite) TestBytes() {
+	b := make([]byte, 8)
+	binary.LittleEndian.PutUint64(b, 2)
+}
 
 func (s *TrySuite) TestMake() {
 	l := make([]int, 3, 5)
