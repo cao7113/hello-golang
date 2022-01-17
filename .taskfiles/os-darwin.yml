@@ -12,15 +12,15 @@ tasks:
       - which go > /dev/null
     cmds:
       - asdf plugin add golang || true
-      - asdf install golang 1.17.5
-      - asdf global golang 1.17.5
+      - asdf install golang 1.17.6
+      - asdf global golang 1.17.6
       - go version
 
   install-tools:
     desc: install daily tools
     cmds:
       - task: install-cilint
-      #- task: install-db-mig
+      - task: install-db-mig
       #- task: install-pb-go-grpc
 
   install-cilint:
