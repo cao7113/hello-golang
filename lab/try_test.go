@@ -6,6 +6,19 @@ import (
 	"testing"
 )
 
+func (s *TrySuite) TestCopy() {
+	var s1 []int
+	s2 := []int{3, 4}
+	copy(s1, s2)
+	s.Nil(s1)
+	s.Equal(0, len(s1))
+
+	s3 := make([]int, len(s2))
+	copy(s3, s2)
+	s.Equal(len(s2), len(s3))
+	s.Equal(s2, s3)
+}
+
 // Send the sequence 2, 3, 4, … to channel 'ch'.
 func generate(ch chan<- int) {
 	for i := 2; ; i++ {
