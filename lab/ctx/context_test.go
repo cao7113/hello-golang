@@ -48,7 +48,7 @@ func (s *ContextSuite) TestCancel() {
 func genNumber() int {
 	rand.Seed(time.Now().Unix())
 	time.Sleep(1 * time.Second)
-	num := rand.Int()
+	num := rand.Intn(1_000_000)
 	return num
 }
 

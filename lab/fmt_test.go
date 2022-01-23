@@ -4,12 +4,10 @@ import (
 	"fmt"
 )
 
-type st struct {
-	age  int
-	name string
-}
+func (s *LabSuite) TestFmt() {
+	i := 3
+	fmt.Printf("i=%d addr=%p \n", i, &i)
 
-func (s *TrySuite) TestFmt() {
 	b1 := true
 	fmt.Printf("%T value: %t %v %+v  %#v\n", b1, b1, b1, b1, b1)
 
@@ -17,7 +15,7 @@ func (s *TrySuite) TestFmt() {
 		age:  12,
 		name: "boy",
 	}
-	fmt.Printf("%T value: %v, %+v %#v\n", st1, st1, st1, st1)
+	fmt.Printf("%T value: %v, %+v %#v pointer: %p  addr: %p \n", st1, st1, st1, st1, st1, &(*st1))
 
 	s1 := "hello 曹 go"
 	fmt.Printf("%T value: %q %#q %x % x\n", s1, s1, s1, s1, s1)
@@ -36,4 +34,9 @@ func (s *TrySuite) TestFmt() {
 
 	f1 := 1.234
 	fmt.Printf("%T value: %g %x % x\n", f1, f1, f1, f1)
+}
+
+type st struct {
+	age  int
+	name string
 }

@@ -10,7 +10,7 @@ func (t *T) Mp() {
 	println(a)
 }
 
-func (s *TrySuite) TestF() {
+func (s *LabSuite) TestF() {
 	t := T{1}
 	T.Mv(t)
 	f := T.Mv

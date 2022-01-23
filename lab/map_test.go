@@ -9,10 +9,10 @@ import (
 	"github.com/sirupsen/logrus"
 )
 
-func (s *TrySuite) TestMap() {
+func (s *LabSuite) TestMap() {
 	var m map[string]int
 	s.Nil(m)
-	s.EqualValues(0, m["a"])
+	s.EqualValues(0, m["A"])
 	s.Panics(func() {
 		m["b"] = 1
 	})
@@ -37,9 +37,9 @@ func TestMapBasic(t *testing.T) {
 }
 
 func TestMapKeysInOrder(t *testing.T) {
-	//When iterating over a map with a range loop, the iteration order is not specified and is not guaranteed to
-	//be the same from one iteration to the next. If you require a stable iteration order you must maintain a separate data structure
-	//that specifies that order. This example uses a separate sorted slice of keys to print a map[int]string in key order:
+	//When iterating over A map with A range loop, the iteration order is not specified and is not guaranteed to
+	//be the same from one iteration to the next. If you require A stable iteration order you must maintain A separate data structure
+	//that specifies that order. This example uses A separate sorted slice of keys to print A map[int]string in key order:
 	m := map[int]string{
 		3: "jian",
 		1: "cao",

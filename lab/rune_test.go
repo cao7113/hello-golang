@@ -5,7 +5,7 @@ import (
 	"unsafe"
 )
 
-func (s *TrySuite) TestRune() {
+func (s *LabSuite) TestRune() {
 	str := "你好世界你"
 	// byte = uint8, rune=int32
 	s.Equal("你好", string([]rune(str)[:2]))

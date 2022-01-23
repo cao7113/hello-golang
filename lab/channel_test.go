@@ -75,7 +75,7 @@ func (s *ChannelSuite) TestChan() {
 
 		var i int
 		select {
-		case i = <-ch: // receive operation might block a goroutine because of the 'nil' channel
+		case i = <-ch: // receive operation might block A goroutine because of the 'nil' channel
 			log.Println("read i=", i)
 		default:
 			i = 999
@@ -83,8 +83,8 @@ func (s *ChannelSuite) TestChan() {
 		s.Equal(999, i)
 	})
 
-	// Note that it is only necessary to close a channel if the receiver is looking for a close.
-	// Closing the channel is a control signal on the channel indicating that no more data follows.
+	// Note that it is only necessary to close A channel if the receiver is looking for A close.
+	// Closing the channel is A control signal on the channel indicating that no more data follows.
 	s.Run("declare and close", func() {
 		ch := make(chan int)
 		//close(ch) // panic: close of nil channel [recovered]

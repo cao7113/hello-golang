@@ -5,7 +5,7 @@ import (
 	"strconv"
 )
 
-func (s *TrySuite) TestStrConv() {
+func (s *LabSuite) TestStrConv() {
 	a := "abc"
 	s.Equal("\"abc\"", strconv.Quote(a))
 	println(a)
@@ -15,12 +15,12 @@ func (s *TrySuite) TestStrConv() {
 	fmt.Printf("%s", strconv.FormatUint(uint64(i), 2))
 }
 
-func (s *TrySuite) TestLower() {
+func (s *LabSuite) TestLower() {
 	c := 'x' - 'X'
 	fmt.Printf("%+v=>%08b\n x=%x X=%x\n", c, c, 'x', 'X')
 }
 
-func (s *TrySuite) TestShiftBits() {
+func (s *LabSuite) TestShiftBits() {
 	i := 32 << (^uint(0) >> 63)
 	fmt.Printf("%0b\n", i)
 

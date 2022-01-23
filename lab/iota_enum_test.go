@@ -20,7 +20,6 @@ const (
 )
 
 const (
-	// bit operation
 	c1 = 1 << iota // 1
 	_              // 2
 	c3             // 4
@@ -66,8 +65,8 @@ func TestEnum(t *testing.T) {
 	assert.Equal(t, West.String(), "West")
 }
 
-// Another common application for iota is to implement a bitmask, a small set of booleans, often called flags,
-// represented by the bits in a single number.
+// Another common application for iota is to implement A bitmask, A small set of booleans, often called flags,
+// represented by the bits in A single number.
 // https://yourbasic.org/golang/bitmask-flag-set-clear/
 // ref log.LstdFlags
 
@@ -78,8 +77,8 @@ The iota keyword represents successive integer constants 0, 1, 2,…
 It resets to 0 whenever the word const appears in the source code,
 and increments after each const specification.
 
-Here we rely on the fact that expressions are implicitly repeated in a paren­thesized const declaration
-– this indicates a repetition of the preceding expression and its type.
+Here we rely on the fact that expressions are implicitly repeated in A paren­thesized const declaration
+– this indicates A repetition of the preceding expression and its type.
 same as
 const (
 	Male   = iota // 0

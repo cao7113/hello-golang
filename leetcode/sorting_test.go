@@ -61,48 +61,58 @@ func sortedSquaresJustWork(nums []int) []int {
 
 // https://leetcode.com/problems/merge-sorted-array/
 func (s *LtCodeSuite) TestP88() {
-	cases := []struct {
+	type st struct {
 		nums1 []int
 		m     int
 		nums2 []int
 		n     int
 		want  []int
-	}{
+	}
+	cases := []st{
 		{[]int{1, 2, 3, 0, 0, 0}, 3, []int{2, 5, 6}, 3, []int{1, 2, 2, 3, 5, 6}},
 		{[]int{1}, 1, []int{}, 0, []int{1}},
 		{[]int{0}, 0, []int{1}, 1, []int{1}},
 		{[]int{2, 0}, 1, []int{1}, 1, []int{1, 2}},
 	}
 
-	s.Run("lib int func", func() {
+	s.Run("in reverse order", func() {
 		for _, e := range cases {
 			merge(e.nums1, e.m, e.nums2, e.n)
 			s.Equal(e.want, e.nums1)
 		}
 	})
 
-	s.Run("try work", func() {
-		cases = []struct {
-			nums1 []int
-			m     int
-			nums2 []int
-			n     int
-			want  []int
-		}{
-			{[]int{1, 2, 3, 0, 0, 0}, 3, []int{2, 5, 6}, 3, []int{1, 2, 2, 3, 5, 6}},
-			{[]int{1}, 1, []int{}, 0, []int{1}},
-			{[]int{0}, 0, []int{1}, 1, []int{1}},
-			{[]int{2, 0}, 1, []int{1}, 1, []int{1, 2}},
-		}
+	s.Run("just work", func() {
+		cases2 := make([]st, len(cases))
+		copy(cases2, cases)
 
 		for _, e := range cases {
-			mergeInReverseOrder(e.nums1, e.m, e.nums2, e.n)
+			mergeJustWork(e.nums1, e.m, e.nums2, e.n)
 			s.Equal(e.want, e.nums1)
 		}
 	})
 }
 
 func merge(nums1 []int, m int, nums2 []int, n int) {
+	i := m - 1
+	j := n - 1
+	// final: max should in the right-most
+	// |---->m---->|---->n---|
+	// --->i............j<----
+
+	for k := m + n - 1; k >= 0; k-- {
+		if j < 0 || // nums2 finished in position
+			(i >= 0 && j >= 0 && nums1[i] > nums2[j]) { //move item in nums1 into proper place in current round
+			nums1[k] = nums1[i]
+			i-- // move forward
+		} else {
+			nums1[k] = nums2[j] // put item in nums2 if it should
+			j--
+		}
+	}
+}
+
+func mergeJustWork(nums1 []int, m int, nums2 []int, n int) {
 	if n == 0 {
 		return
 	}
@@ -111,18 +121,4 @@ func merge(nums1 []int, m int, nums2 []int, n int) {
 		nums1[m+i] = b
 	}
 	sort.Ints(nums1)
-}
-
-func mergeInReverseOrder(nums1 []int, m int, nums2 []int, n int) {
-	i := m - 1
-	j := n - 1
-	for k := m + n - 1; k >= 0; k-- {
-		if (i >= 0 && j >= 0 && nums1[i] > nums2[j]) || (j < 0) {
-			nums1[k] = nums1[i]
-			i--
-		} else {
-			nums1[k] = nums2[j]
-			j--
-		}
-	}
 }

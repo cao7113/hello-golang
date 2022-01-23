@@ -28,9 +28,11 @@ func (s *ReflectSuite) TestReflect() {
 }
 
 func (s *ReflectSuite) TestAddressable() {
-	a := struct{ a string }{"123"}
+	type Struct1 struct{ A string }
+	a := Struct1{"123"}
 	t := reflect.TypeOf(a)
-	fmt.Printf("%v", t)
+
+	fmt.Printf("%v name: %s\n", t, t.Name())
 
 	v := reflect.ValueOf(a)
 	s.False(v.CanAddr())

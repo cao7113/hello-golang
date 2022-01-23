@@ -44,7 +44,7 @@ func f() int {
 	return 0
 }
 
-func (s *TrySuite) TestSelect() {
+func (s *LabSuite) TestSelect() {
 	var a []int
 	var c, c1, c2, c3, c4 chan int
 	var i1, i2 int
@@ -62,7 +62,7 @@ func (s *TrySuite) TestSelect() {
 	case a[f()] = <-c4:
 		// same as:
 		// case t := <-c4
-		//	a[f()] = t
+		//	A[f()] = t
 	default:
 		print("no communication\n")
 	}

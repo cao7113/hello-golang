@@ -6,7 +6,7 @@ import (
 	"testing"
 )
 
-func (s *TrySuite) TestCopy() {
+func (s *LabSuite) TestCopy() {
 	var s1 []int
 	s2 := []int{3, 4}
 	copy(s1, s2)
@@ -38,8 +38,8 @@ func filter(src <-chan int, dst chan<- int, prime int) {
 
 // The prime sieve: Daisy-chain filter processes together.
 func sieve() {
-	ch := make(chan int) // Create a new channel.
-	go generate(ch)      // Start generate() as a subprocess.
+	ch := make(chan int) // Create A new channel.
+	go generate(ch)      // Start generate() as A subprocess.
 	for {
 		prime := <-ch
 		fmt.Print(prime, "\n")
@@ -52,13 +52,13 @@ func sieve() {
 	}
 }
 
-func (s *TrySuite) TestSieve() {
+func (s *LabSuite) TestSieve() {
 	sieve()
 }
 
 var a = 1 // file block
 
-func (s *TrySuite) TestBlock() {
+func (s *LabSuite) TestBlock() {
 	s.EqualValues(1, a)
 	var a = 2 // method block
 	if true {
@@ -68,10 +68,10 @@ func (s *TrySuite) TestBlock() {
 	s.EqualValues(2, a)
 }
 
-func TestTrySuite(t *testing.T) {
-	suite.Run(t, &TrySuite{})
+func TestLabSuite(t *testing.T) {
+	suite.Run(t, &LabSuite{})
 }
 
-type TrySuite struct {
+type LabSuite struct {
 	suite.Suite
 }

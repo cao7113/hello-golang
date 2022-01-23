@@ -25,8 +25,8 @@ func withHook(name string, h hook) {
 
 func (s *FuncSuite) TestHookd() {
 	withHook("no-hook", nil)
-	withHook("a-hook", func() {
-		println("run a-hook")
+	withHook("A-hook", func() {
+		println("run A-hook")
 	})
 	withHook("no-hook-again", nil)
 }
