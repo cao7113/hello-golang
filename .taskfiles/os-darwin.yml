@@ -9,7 +9,7 @@ tasks:
   install-asdf-golang:
     desc: install golang by great ASDF
     status:
-      - which go > /dev/null
+      - asdf where golang > /dev/null
     cmds:
       - asdf plugin add golang || true
       - asdf install golang 1.17.6
