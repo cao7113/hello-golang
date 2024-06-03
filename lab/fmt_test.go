@@ -33,7 +33,11 @@ func (s *LabSuite) TestFmt() {
 	fmt.Printf("%T value: %q %#q %x % x\n", m1, m1, m1, m1, m1)
 
 	f1 := 1.234
-	fmt.Printf("%T value: %g %x % x\n", f1, f1, f1, f1)
+	fmt.Printf("%T value: %g %e %f\n",
+		f1, f1, f1, f1)
+
+	i1 = 123
+	fmt.Printf("int: %d pointer: %p\n", i1, &i1)
 }
 
 type st struct {
